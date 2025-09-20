@@ -7,6 +7,8 @@ import { LanguageProvider } from './LanguageContext'; // Import Provider
 import './App.css';
 import CampRegistrationForm from './components/CampRegistrationForm';
 import EventsPage from './components/EventsPage';
+import AdminPage from './admin/AdminPage';
+import './admin/Admin.css';
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
             <Route path="/binh-minh" element={<CampRegistrationForm />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/thank-you" element={<ThankYouPage />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </div>
       </Router>
