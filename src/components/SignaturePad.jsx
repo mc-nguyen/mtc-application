@@ -19,7 +19,7 @@ function SignaturePad({ content, signerName, onSign, existingSignature }) {
     if (signerName && signerName !== currentSignerName) {
       setCurrentSignerName(signerName);
     }
-  }, [signerName]);
+  }, [signerName, currentSignerName]);
 
   const clearSignature = () => {
     sigCanvas.current.clear();

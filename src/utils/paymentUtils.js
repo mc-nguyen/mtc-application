@@ -2,7 +2,7 @@ export const PRICES = {
     annualFee: 50,
     uniformShirt: 25,
     uniformSkort: 25,
-    scarf: 20,
+    scarf: 10,
 };
 
 export const calculateTotal = (paymentInfo, isAdult) => {

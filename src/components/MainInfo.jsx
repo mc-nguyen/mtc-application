@@ -3,10 +3,10 @@ import SignaturePad from './SignaturePad';
 import { useLanguage } from '../LanguageContext';
 import { useNganh } from '../hooks/useNganh'; // Import hook mới
 
-const MainInfo = forwardRef(({ formData, setFormData }, ref) => {
+const MainInfo = forwardRef(({ formData, setFormData, isCamp = false }, ref) => {
   const { t } = useLanguage();
   const [showErrors, setShowErrors] = useState(false);
-  
+
   // Sử dụng custom hook để lấy tuổi và ngành
   const { nganh: participantNganh } = useNganh(formData.dob);
 
@@ -45,7 +45,7 @@ const MainInfo = forwardRef(({ formData, setFormData }, ref) => {
     validate: () => {
       const isParticipantSigned = !!formData.mainInfo.participantSignature;
       const isParentSigned = formData.isAdult || !!formData.mainInfo.parentSignature;
-      
+
       const isValid = isParticipantSigned && isParentSigned;
       if (!isValid) {
         setShowErrors(true);
@@ -59,12 +59,12 @@ const MainInfo = forwardRef(({ formData, setFormData }, ref) => {
   return (
     <div className="form-section">
       <h2>{t('main_info_title')}</h2>
-      
+
       {/* 1. Thông tin cá nhân */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
         <div>
-          <label>{t('main_info_sacred_name')}</label>
-          <input type="text" name="sacredName" value={formData.mainInfo.sacredName || ''} onChange={handleChange} required />
+          <label>{t('main_info_saint_name')}</label>
+          <input type="text" name="saintName" value={formData.mainInfo.saintName || ''} onChange={handleChange} required />
         </div>
         <div>
           <label>{t('main_info_last_name')}</label>
@@ -79,7 +79,7 @@ const MainInfo = forwardRef(({ formData, setFormData }, ref) => {
           <input type="text" name="givenName" value={formData.mainInfo.givenName || ''} onChange={handleChange} required />
         </div>
       </div>
-      
+
       <hr style={{ margin: '30px 0' }} />
 
       {/* 2. Thông tin cha mẹ (chỉ hiện thị cho vị thành niên) */}
@@ -115,7 +115,7 @@ const MainInfo = forwardRef(({ formData, setFormData }, ref) => {
           <input type="text" name="zip" value={formData.mainInfo.zip || ''} onChange={handleChange} required />
         </div>
       </div>
-      
+
       <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
         <div>
           <label>{t('main_info_home_phone')}</label>
@@ -142,7 +142,7 @@ const MainInfo = forwardRef(({ formData, setFormData }, ref) => {
           <input type="tel" name="emergencyContactPhone" value={formData.mainInfo.emergencyContactPhone || ''} onChange={handleChange} required />
         </div>
       </div>
-      
+
       <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
         <div>
           <label>{t('main_info_dob')}</label>
@@ -155,31 +155,36 @@ const MainInfo = forwardRef(({ formData, setFormData }, ref) => {
       </div>
 
       {/* Thêm phần hiển thị Ngành ngay trước chữ ký */}
-      <hr style={{ margin: '30px 0' }} />
-      <div style={{ marginBottom: '20px' }}>
-        <label>{t('nganh_label')}</label>
-        {formData.isAdult ? (
-          <select 
-            name="nganh" 
-            value={formData.mainInfo.nganh || ''} 
-            onChange={handleChange}
-            className="nganh-select"
-            required
-          >
-            <option value="">{t('select_option')}</option>
-            <option value="Hiệp Sĩ Trưởng Thành">{t('nganh_adult_option1')}</option>
-            <option value="Huynh Trưởng">{t('nganh_adult_option2')}</option>
-            <option value="Trợ Tá">{t('nganh_adult_option3')}</option>
-            <option value="Huấn Luyện Viên">{t('nganh_adult_option4')}</option>
-          </select>
-        ) : (
-          <input type="text" value={participantNganh} disabled className="nganh-input" />
-        )}
-      </div>
+      {!isCamp && (<>
+        <hr style={{ margin: '30px 0' }} />
+        <div style={{ marginBottom: '20px' }}>
+          <label>{t('nganh_label')}</label>
+          {formData.isAdult ? (
+            <select
+              name="nganh"
+              value={formData.mainInfo.nganh || ''}
+              onChange={handleChange}
+              className="nganh-select"
+              required
+            >
+              <option value="">{t('select_option')}</option>
+              <option value="Hiệp Sĩ Trưởng Thành">{t('nganh_adult_option1')}</option>
+              <option value="Huynh Trưởng">{t('nganh_adult_option2')}</option>
+              <option value="Trợ Tá">{t('nganh_adult_option3')}</option>
+              <option value="Huấn Luyện Viên">{t('nganh_adult_option4')}</option>
+            </select>
+          ) : (
+            <input type="text" value={participantNganh} disabled className="nganh-input" />
+          )}
+        </div></>
+      )}
 
       {/* 5. Chữ ký */}
       <SignaturePad
-        content={<div dangerouslySetInnerHTML={{ __html: t('main_info_participant_signature_content') }} />}
+        content={<div dangerouslySetInnerHTML={{
+          __html:
+            isCamp ? t('camp_participant_signature_content') : t('main_info_participant_signature_content')
+        }} />}
         signerName={formData.mainInfo.givenName}
         onSign={handleParticipantSignature}
         existingSignature={formData.mainInfo.participantSignature}
@@ -187,11 +192,11 @@ const MainInfo = forwardRef(({ formData, setFormData }, ref) => {
       {showErrors && !formData.mainInfo.participantSignature && (
         <p className="required-message">{t('participant_signature_required')}</p>
       )}
-      
+
       {!formData.isAdult && (
         <>
           <SignaturePad
-            content={<div dangerouslySetInnerHTML={{ __html: t('main_info_parent_signature_content')}} />}
+            content={<div dangerouslySetInnerHTML={{ __html: t('main_info_parent_signature_content') }} />}
             signerName={formData.mainInfo.fatherName || formData.mainInfo.motherName}
             onSign={handleParentSignature}
             existingSignature={formData.mainInfo.parentSignature}

@@ -12,7 +12,7 @@ function HomePage() {
   };
 
   const handleEventsClick = () => {
-    alert(t('homepage_events_btn'));
+    navigate('/events'); // Dẫn đến trang events mới
   };
 
   return (

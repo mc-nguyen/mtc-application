@@ -1,6 +1,7 @@
 import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import SignaturePad from './SignaturePad';
 import { useLanguage } from '../LanguageContext';
+import { generateWaiverInitials, validateWaiver } from '../utils/waiverUtils'; // Import các hàm tiện ích
 
 const WaiverRelease = forwardRef(({ formData, setFormData }, ref) => {
   const { t } = useLanguage();
@@ -11,7 +12,7 @@ const WaiverRelease = forwardRef(({ formData, setFormData }, ref) => {
   const parentName = formData.mainInfo.parentName || '';
 
   const handleInitialChange = (key) => {
-    const initialSig = `${(formData.isAdult ? formData.mainInfo.givenName : parentName).charAt(0).toUpperCase()}${(formData.isAdult ? formData.mainInfo.lastName : '').charAt(0).toUpperCase()}`;
+    const initialSig = generateWaiverInitials(formData);
     setInitials(prev => ({
       ...prev,
       [key]: initialSig,
@@ -43,16 +44,8 @@ const WaiverRelease = forwardRef(({ formData, setFormData }, ref) => {
 
   useImperativeHandle(ref, () => ({
     validate: () => {
-      const allInitialed = initialSections.every(section => initials[section.initialKey]);
-      const hasSignature = !!formData.waiverRelease.signature;
-      const hasParentName = formData.isAdult || (parentName && parentName.trim() !== '');
-      
-      const isValid = allInitialed && hasSignature && hasParentName;
-      if (!isValid) {
-        setShowErrors(true);
-      } else {
-        setShowErrors(false);
-      }
+      const isValid = validateWaiver(formData, initials, initialSections);
+      setShowErrors(!isValid);
       return isValid;
     }
   }));

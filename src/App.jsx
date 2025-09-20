@@ -5,6 +5,8 @@ import RegistrationForm from './components/RegistrationForm';
 import ThankYouPage from './components/ThankYouPage';
 import { LanguageProvider } from './LanguageContext'; // Import Provider
 import './App.css';
+import CampRegistrationForm from './components/CampRegistrationForm';
+import EventsPage from './components/EventsPage';
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/registration" element={<RegistrationForm />} />
+            <Route path="/binh-minh" element={<CampRegistrationForm />} />
+            <Route path="/events" element={<EventsPage />} />
             <Route path="/thank-you" element={<ThankYouPage />} />
           </Routes>
         </div>

@@ -1,33 +1,33 @@
 import React, { useState, useRef } from 'react';
 import StepIndicator from './StepIndicator';
 import MainInfo from './MainInfo';
-import PaymentInfo from './PaymentInfo';
 import HealthInfo from './HealthInfo';
 import WaiverRelease from './WaiverRelease';
-import TNTTRules from './TNTTRules';
 import { useLanguage } from '../LanguageContext';
-import { useRegistrationForm } from '../hooks/useRegistrationForm'; // Import custom hook mới
+import { useCampRegistrationForm } from '../hooks/useCampRegistrationForm';
 
-function RegistrationForm() {
+function CampRegistrationForm() {
   const { t } = useLanguage();
   const mainInfoRef = useRef(null);
   const healthInfoRef = useRef(null);
   const waiverReleaseRef = useRef(null);
-  const tnttRulesRef = useRef(null);
 
+  // FORM DATA RIÊNG CHO CAMP - có thể có field khác
   const [formData, setFormData] = useState({
     dob: '',
     isAdult: false,
     mainInfo: {},
-    paymentInfo: {
-      annualFee: 50,
+    healthInfo: {
+      emergencyContact: {
+        name: '',
+        phone: '',
+        relationship: ''
+      }
     },
-    healthInfo: {},
     waiverRelease: {},
-    tnttRules: false,
   });
 
-  const refs = { mainInfoRef, healthInfoRef, waiverReleaseRef, tnttRulesRef };
+  const refs = { mainInfoRef, healthInfoRef, waiverReleaseRef };
   const {
     currentStep,
     steps,
@@ -35,28 +35,38 @@ function RegistrationForm() {
     handleBack,
     handleDobChange,
     handleSubmit,
-  } = useRegistrationForm(formData, setFormData, refs);
+  } = useCampRegistrationForm(formData, setFormData, refs);
 
   const renderStepComponent = () => {
     switch (currentStep) {
       case 0:
         return (
           <div className="form-section">
-            <h2>{t('dob_step_title')}</h2>
+            <h2>{t('camp_dob_step_title')}</h2>
             <label>{t('dob_label')}</label>
             <input type="date" value={formData.dob} onChange={handleDobChange} required />
           </div>
         );
       case 1:
-        return <MainInfo ref={mainInfoRef} formData={formData} setFormData={setFormData} />;
+        return <MainInfo 
+          ref={mainInfoRef} 
+          formData={formData} 
+          setFormData={setFormData}
+          isCamp={true} // Truyền prop để component biết là camp
+        />;
       case 2:
-        return <PaymentInfo formData={formData} setFormData={setFormData} />;
+        return <HealthInfo 
+          ref={healthInfoRef} 
+          formData={formData} 
+          setFormData={setFormData}
+        />;
       case 3:
-        return <HealthInfo ref={healthInfoRef} formData={formData} setFormData={setFormData} />
-      case 4:
-        return <WaiverRelease ref={waiverReleaseRef} formData={formData} setFormData={setFormData} />;
-      case 5:
-        return <TNTTRules ref={tnttRulesRef} formData={formData} setFormData={setFormData} />;
+        return <WaiverRelease 
+          ref={waiverReleaseRef} 
+          formData={formData} 
+          setFormData={setFormData}
+          isCamp={true} // Truyền prop để component biết là camp
+        />;
       default:
         return null;
     }
@@ -64,7 +74,7 @@ function RegistrationForm() {
 
   return (
     <div className="registration-container">
-      <h1>{t('form_title')}</h1>
+      <h1>{t('camp_form_title')}</h1>
       <StepIndicator currentStep={currentStep} steps={steps} />
       {renderStepComponent()}
 
@@ -73,11 +83,13 @@ function RegistrationForm() {
         {currentStep < steps.length - 1 ? (
           <button type="button" onClick={handleNext} style={{ marginLeft: 'auto' }}>{t('next_btn')}</button>
         ) : (
-          <button type="button" onClick={handleSubmit} style={{ backgroundColor: '#28a745', marginLeft: 'auto' }}>{t('submit_btn')}</button>
+          <button type="button" onClick={handleSubmit} style={{ backgroundColor: '#28a745', marginLeft: 'auto' }}>
+            {t('submit_btn')}
+          </button>
         )}
       </div>
     </div>
   );
 }
 
-export default RegistrationForm;
+export default CampRegistrationForm;
