@@ -616,6 +616,14 @@ input:focus {
   outline-offset: 2px;
 }
 
+input {
+  padding: 10px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
 /* Custom Scrollbar for Detail Panel */
 .detail-panel::-webkit-scrollbar {
   width: 8px;

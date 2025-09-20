@@ -1,3 +1,4 @@
+// src/components/ThankYouPage.jsx
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../LanguageContext';
@@ -13,14 +14,15 @@ function ThankYouPage() {
     navigate('/');
   };
 
-  const totalAmount = formData ? calculateTotal(formData.paymentInfo, formData.isAdult) : 0;
+  // Chỉ tính tổng cho membership, không tính cho camp
+  const totalAmount = formData && !isCamp ? calculateTotal(formData.paymentInfo, formData.isAdult) : 0;
 
-  const participantName = [
-    formData?.mainInfo?.sacredName,
-    formData?.mainInfo?.lastName,
-    formData?.mainInfo?.middleName,
-    formData?.mainInfo?.givenName
-  ].filter(Boolean).join(' ');
+  const participantName = formData ? [
+    formData.mainInfo?.saintName,
+    formData.mainInfo?.lastName,
+    formData.mainInfo?.middleName,
+    formData.mainInfo?.givenName
+  ].filter(Boolean).join(' ') : '';
 
   return (
     <div className="thank-you-container">
@@ -28,33 +30,38 @@ function ThankYouPage() {
       
       {/* HIỂN THỊ THÔNG BÁO KHÁC NHAU CHO CAMP VÀ MEMBERSHIP */}
       {isCamp ? (
-        <p>{t('camp_thank_you_message')}</p>
+        <div className="thank-you-message">
+          <p>{t('camp_thank_you_message')}</p>
+          <p>Chúng tôi sẽ liên hệ với bạn sớm để thông báo thêm chi tiết về trại.</p>
+        </div>
       ) : (
-        <p>{t('thank_you_message')}</p>
+        <div className="thank-you-message">
+          <p>{t('thank_you_message')}</p>
+        </div>
       )}
 
       {formData && (
         <>
           <div className="personal-info-summary">
-            <h3>{t('main_info_title')}</h3>
+            <h3>Thông tin đăng ký</h3>
             <p><strong>Họ và tên:</strong> {participantName}</p>
             <p><strong>{t('main_info_dob')}:</strong> {formData.dob}</p>
-            <p><strong>{t('main_info_email')}:</strong> {formData.mainInfo.email}</p>
-            <p><strong>{t('main_info_cell_phone')}:</strong> {formData.mainInfo.cellPhone}</p>
+            <p><strong>{t('main_info_email')}:</strong> {formData.mainInfo?.email}</p>
+            <p><strong>{t('main_info_cell_phone')}:</strong> {formData.mainInfo?.cellPhone}</p>
             
-            {/* CHỈ HIỂN THỊ THÔNG TIN PHỤ HUYNH CHO MEMBERSHIP */}
+            {/* CHỈ HIỂN THỊ THÔNG TIN PHỤ HUYNH CHO MEMBERSHIP và không phải adult */}
             {!isCamp && !formData.isAdult && (
               <>
-                <p><strong>{t('main_info_father_name')}:</strong> {formData.mainInfo.fatherName}</p>
-                <p><strong>{t('main_info_mother_name')}:</strong> {formData.mainInfo.motherName}</p>
+                <p><strong>{t('main_info_father_name')}:</strong> {formData.mainInfo?.fatherName}</p>
+                <p><strong>{t('main_info_mother_name')}:</strong> {formData.mainInfo?.motherName}</p>
               </>
             )}
             
-            <p><strong>{t('main_info_city')}:</strong> {formData.mainInfo.streetAddress}, {formData.mainInfo.city}, {formData.mainInfo.state}, {formData.mainInfo.zip}</p>
+            <p><strong>Địa chỉ:</strong> {formData.mainInfo?.streetAddress}, {formData.mainInfo?.city}, {formData.mainInfo?.state}, {formData.mainInfo?.zip}</p>
           </div>
 
           {/* CHỈ HIỂN THỊ BIÊN LAI CHO MEMBERSHIP */}
-          {!isCamp && (
+          {!isCamp && formData.paymentInfo && (
             <div className="receipt">
               <h3>Biên lai thanh toán</h3>
               <table>
@@ -93,12 +100,35 @@ function ThankYouPage() {
                   </tr>
                 </tbody>
               </table>
+              <div className="payment-instructions">
+                <p>Vui lòng thanh toán bằng tiền mặt trong buổi sinh hoạt tiếp theo.</p>
+              </div>
+            </div>
+          )}
+
+          {isCamp && (
+            <div className="camp-info">
+              <h3>Thông tin trại Bình Minh</h3>
+              <p>Địa điểm: [Sẽ thông báo sau]</p>
+              <p>Thời gian: [Sẽ thông báo sau]</p>
+              <p>Chi phí: [Sẽ thông báo sau]</p>
+              <p>Chúng tôi sẽ gửi email chi tiết đến: <strong>{formData.mainInfo?.email}</strong></p>
             </div>
           )}
         </>
       )}
 
-      <button onClick={handleBackToHome}>{t('back_to_home')}</button>
+      <div className="action-buttons">
+        <button onClick={handleBackToHome} className="btn">
+          {t('back_to_home')}
+        </button>
+        
+        {!isCamp && (
+          <button onClick={() => window.print()} className="btn">
+            In biên lai
+          </button>
+        )}
+      </div>
     </div>
   );
 }

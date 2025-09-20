@@ -46,7 +46,7 @@ export const useCampRegistrationForm = (formData, setFormData, refs) => {
             // VALIDATION RIÊNG CHO CAMP - có thể khác
             const { mainInfo } = formData;
             const requiredFields = [
-                'sacredName', 'lastName', 'middleName', 'givenName',
+                'saintName', 'lastName', 'middleName', 'givenName',
                 'city', 'state', 'zip', 'cellPhone',
                 'emergencyContactName', 'emergencyContactPhone', 'email'
             ];

@@ -117,6 +117,31 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleCampPaidToggle = async (campId, currentPaidStatus) => {
+    try {
+      const campRef = doc(db, 'artifacts', 'mtc-applications', 'public', 'data', 'campSubmissions', campId);
+      await updateDoc(campRef, {
+        paid: !currentPaidStatus
+      });
+      
+      // Update local state
+      setCamps(camps.map(camp => 
+        camp.id === campId 
+          ? { ...camp, paid: !currentPaidStatus }
+          : camp
+      ));
+      
+      if (selectedCamp && selectedCamp.id === campId) {
+        setSelectedCamp({ ...selectedCamp, paid: !currentPaidStatus });
+      }
+      
+      alert('Cập nhật trạng thái thanh toán thành công!');
+    } catch (error) {
+      console.error('Lỗi khi cập nhật:', error);
+      alert('Có lỗi xảy ra khi cập nhật!');
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -252,6 +277,119 @@ const AdminDashboard = () => {
     );
   };
 
+  const renderCampDetail = (camp) => {
+    if (!camp) return null;
+
+    return (
+      <div className="detail-panel">
+        <div className="detail-header">
+          <h4>Thông tin chi tiết đăng ký trại</h4>
+          <button onClick={() => setSelectedCamp(null)} className="toggle-view-btn">
+            ← Quay lại danh sách
+          </button>
+        </div>
+        
+        <div className="detail-section">
+          <h5>Thông tin cá nhân</h5>
+          <p><strong>Tên Thánh:</strong> {camp.mainInfo?.saintName || 'N/A'}</p>
+          <p><strong>Họ:</strong> {camp.mainInfo?.lastName || 'N/A'}</p>
+          <p><strong>Tên đệm:</strong> {camp.mainInfo?.middleName || 'N/A'}</p>
+          <p><strong>Tên gọi:</strong> {camp.mainInfo?.givenName || 'N/A'}</p>
+          <p><strong>Ngày sinh:</strong> {camp.dob || 'N/A'}</p>
+          <p><strong>Email:</strong> {camp.mainInfo?.email || 'N/A'}</p>
+        </div>
+
+        {!camp.isAdult && (
+          <div className="detail-section">
+            <h5>Thông tin phụ huynh</h5>
+            <p><strong>Tên Bố:</strong> {camp.mainInfo?.fatherName || 'N/A'}</p>
+            <p><strong>Tên Mẹ:</strong> {camp.mainInfo?.motherName || 'N/A'}</p>
+          </div>
+        )}
+
+        <div className="detail-section">
+          <h5>Địa chỉ liên lạc</h5>
+          <p><strong>Địa chỉ:</strong> {camp.mainInfo?.streetAddress || 'N/A'}</p>
+          <p><strong>Thành phố:</strong> {camp.mainInfo?.city || 'N/A'}</p>
+          <p><strong>Tiểu bang:</strong> {camp.mainInfo?.state || 'N/A'}</p>
+          <p><strong>Zipcode:</strong> {camp.mainInfo?.zip || 'N/A'}</p>
+        </div>
+
+        <div className="detail-section">
+          <h5>Liên hệ</h5>
+          <p><strong>Điện thoại nhà:</strong> {camp.mainInfo?.homePhone || 'N/A'}</p>
+          <p><strong>Điện thoại di động:</strong> {camp.mainInfo?.cellPhone || 'N/A'}</p>
+          <p><strong>Điện thoại cơ quan:</strong> {camp.mainInfo?.workPhone || 'N/A'}</p>
+        </div>
+
+        <div className="detail-section">
+          <h5>Liên hệ khẩn cấp</h5>
+          <p><strong>Tên:</strong> {camp.mainInfo?.emergencyContactName || 'N/A'}</p>
+          <p><strong>Số điện thoại:</strong> {camp.mainInfo?.emergencyContactPhone || 'N/A'}</p>
+        </div>
+
+        {camp.paymentInfo && (
+          <div className="detail-section">
+            <h5>Thanh toán</h5>
+            <p><strong>Trạng thái:</strong> 
+              <span className={camp.paid ? 'status-paid' : 'status-unpaid'}>
+                {camp.paid ? ' Đã thanh toán' : ' Chưa thanh toán'}
+              </span>
+            </p>
+            <p><strong>Phí trại:</strong> ${camp.paymentInfo.campFee || 0}</p>
+            <p><strong>Tổng cộng:</strong> ${camp.paymentInfo.campFee || 0}</p>
+          </div>
+        )}
+
+        <div className="detail-section">
+          <h5>Chữ ký</h5>
+          {camp.mainInfo?.participantSignature && (
+            <div>
+              <p><strong>Chữ ký đoàn sinh:</strong></p>
+              <img 
+                src={camp.mainInfo.participantSignature} 
+                alt="Chữ ký đoàn sinh" 
+                className="signature-image"
+              />
+            </div>
+          )}
+          {camp.mainInfo?.parentSignature && (
+            <div>
+              <p><strong>Chữ ký phụ huynh:</strong></p>
+              <img 
+                src={camp.mainInfo.parentSignature} 
+                alt="Chữ ký phụ huynh" 
+                className="signature-image"
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="detail-section">
+          <h5>Thông tin hệ thống</h5>
+          <p><strong>Ngày đăng ký:</strong> {new Date(camp.submissionDate).toLocaleString('vi-VN')}</p>
+          <p><strong>ID:</strong> {camp.id}</p>
+          <p><strong>Loại:</strong> {camp.type || 'Trại Bình Minh'}</p>
+        </div>
+
+        <div className="detail-actions">
+          <button 
+            onClick={() => handleCampPaidToggle(camp.id, camp.paid || false)}
+            className={camp.paid ? 'paid-btn' : 'unpaid-btn'}
+          >
+            {camp.paid ? 'Đánh dấu chưa thanh toán' : 'Đánh dấu đã thanh toán'}
+          </button>
+          <button 
+            onClick={() => handleDelete(camp.id, 'camp')}
+            className="delete-btn"
+          >
+            Xóa đăng ký trại
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const calculateTotal = (paymentInfo, isAdult) => {
     if (!paymentInfo) return 0;
     let total = paymentInfo.annualFee || 0;
@@ -290,6 +428,14 @@ const AdminDashboard = () => {
         <div className="stat-card">
           <h3>Tổng đăng ký trại</h3>
           <p className="stat-number">{camps.length}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Trại đã thanh toán</h3>
+          <p className="stat-number">{camps.filter(c => c.paid).length}</p>
+        </div>
+        <div className="stat-card">
+          <h3>Trại chưa thanh toán</h3>
+          <p className="stat-number">{camps.filter(c => !c.paid).length}</p>
         </div>
       </div>
 
@@ -395,35 +541,7 @@ const AdminDashboard = () => {
           <div className="data-container">
             {selectedCamp ? (
               <div className="detail-view">
-                <div className="detail-panel">
-                  <div className="detail-header">
-                    <h4>Thông tin chi tiết đăng ký trại</h4>
-                    <button onClick={() => setSelectedCamp(null)} className="toggle-view-btn">
-                      ← Quay lại danh sách
-                    </button>
-                  </div>
-                  <div className="detail-section">
-                    <h5>Thông tin người tham gia</h5>
-                    <p><strong>Họ tên:</strong> {selectedCamp.mainInfo?.givenName} {selectedCamp.mainInfo?.lastName}</p>
-                    <p><strong>Email:</strong> {selectedCamp.mainInfo?.email || 'N/A'}</p>
-                    <p><strong>Số điện thoại:</strong> {selectedCamp.mainInfo?.cellPhone || 'N/A'}</p>
-                    <p><strong>Ngày sinh:</strong> {selectedCamp.dob || 'N/A'}</p>
-                  </div>
-                  <div className="detail-section">
-                    <h5>Thông tin hệ thống</h5>
-                    <p><strong>Ngày đăng ký:</strong> {new Date(selectedCamp.submissionDate).toLocaleString('vi-VN')}</p>
-                    <p><strong>ID:</strong> {selectedCamp.id}</p>
-                    <p><strong>Loại:</strong> {selectedCamp.type || 'Trại Bình Minh'}</p>
-                  </div>
-                  <div className="detail-actions">
-                    <button 
-                      onClick={() => handleDelete(selectedCamp.id, 'camp')}
-                      className="delete-btn"
-                    >
-                      Xóa đăng ký trại
-                    </button>
-                  </div>
-                </div>
+                {renderCampDetail(selectedCamp)}
               </div>
             ) : (
               <div className="data-table">
@@ -434,7 +552,7 @@ const AdminDashboard = () => {
                       <th>Họ tên</th>
                       <th>Ngày sinh</th>
                       <th>Email</th>
-                      <th>Ngày đăng ký</th>
+                      <th>Thanh toán</th>
                       <th>Xóa</th>
                     </tr>
                   </thead>
@@ -448,7 +566,11 @@ const AdminDashboard = () => {
                         <td>{camp.mainInfo?.givenName} {camp.mainInfo?.lastName}</td>
                         <td>{camp.dob}</td>
                         <td>{camp.mainInfo?.email}</td>
-                        <td>{new Date(camp.submissionDate).toLocaleDateString('vi-VN')}</td>
+                        <td>
+                          <span>
+                            {camp.paid ? '✅' : '❌'}
+                          </span>
+                        </td>
                         <td onClick={(e) => e.stopPropagation()}>
                           <button 
                             className="delete-btn"

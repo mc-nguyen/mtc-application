@@ -1,13 +1,25 @@
 import React from 'react';
 import { useLanguage } from '../LanguageContext';
+import './LanguageSwitcher.css'; // Tạo file CSS mới cho LanguageSwitcher
 
 function LanguageSwitcher() {
-  const { changeLanguage } = useLanguage();
+  const { changeLanguage, currentLanguage } = useLanguage();
 
   return (
-    <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
-      <button onClick={() => changeLanguage('vi')} style={{ marginRight: '5px' }}>Tiếng Việt</button>
-      <button onClick={() => changeLanguage('en')}>English</button>
+    <div className="language-switcher">
+      <button 
+        onClick={() => changeLanguage('vi')} 
+        className={currentLanguage === 'vi' ? 'active' : ''}
+      >
+        VI
+      </button>
+      <span className="language-divider">|</span>
+      <button 
+        onClick={() => changeLanguage('en')}
+        className={currentLanguage === 'en' ? 'active' : ''}
+      >
+        EN
+      </button>
     </div>
   );
 }

@@ -147,7 +147,7 @@ export const translations = {
         parent_name_required: "Vui lòng điền họ tên phụ huynh.",
         signature_required_text: "Vui lòng ký tên vào đây để hoàn tất đơn ghi danh.",
 
-        // Các sections với initials
+        // Các sections với initials (giữ nguyên cấu trúc)
         waiver_sections_with_initials: [
             {
                 text: "1. Miễn trừ, tha bổng và vĩnh viễn giải phóng VEYM và nhân viên, tình nguyện viên, đại lý, người phục vụ, sĩ quan, người ủy thác, đại diện, chi nhánh và nhà tài trợ của họ, với tư cách chính thức và cá nhân, cũng như Giáo xứ và Giáo phận của tôi, nhân viên và đại lý, đại diện, nhà tài trợ, người giám hộ, hoặc tình nguyện viên của họ, khỏi bất kỳ và tất cả trách nhiệm pháp lý nào đối với bất kỳ và tất cả các thiệt hại, thương tích (bao gồm cả tử vong) cho con người, mất mát tài sản, hoặc cả hai, phát sinh trong, do, hoặc liên quan đến việc tôi tham gia Sự kiện, mà tôi, con tôi hoặc bất kỳ người nào có thể phải chịu hoặc bị tổn hại liên quan đến bất kỳ hoạt động nào của Sự kiện, bao gồm, nhưng không giới hạn, các hoạt động liên quan trực tiếp hoặc gián tiếp dẫn đến và bắt nguồn từ Sự kiện, ngay cả những hoạt động phát sinh từ việc tôi đi đến và từ Sự kiện.",
@@ -190,7 +190,25 @@ export const translations = {
         // ==================== NỘI QUY TNTT ====================
         tntt_rules_title: "Nội quy TNTT",
         tntt_rules_agree_label: "Tôi đã đọc và đồng ý.",
-        tntt_rules_content: `...`, // Giữ nguyên nội dung
+        tntt_rules_content: `<strong>NỘI QUY CỦA ĐOÀN THIẾU NHI THÁNH THỂ</strong>
+<ol>
+  <li>Tuân theo quyền và sự hướng dẫn của các Huynh Trưởng, Đoàn Trưởng và Cha Tuyên Úy ngành của bạn. Hãy thể hiện sự tôn trọng và lịch sự với tất cả những người lớn tuổi hơn bạn vì họ thay thế vai trò của cha mẹ khi bạn không ở nhà. Chăm sóc và hy sinh cho những người trẻ tuổi hơn bạn vì họ là anh chị em của bạn qua Chúa Kitô.</li>
+  <li>Nói những từ như: "làm ơn", "cảm ơn", "tôi có thể giúp gì không?", "không có gì", "vâng", "không", "tôi không hiểu" và "tôi xin lỗi" là một phần của lời nói thường xuyên của bạn. "Thưa", "dạ", "có" và "vâng" càng tốt hơn. Không sử dụng những từ như: "hả?", "ừ", "uh huh", "OK", "tùy", "chắc chắn" và "hmmm?". Không có âm thanh cơ thể không phù hợp trong bất kỳ hoạt động nào, đặc biệt là trong Thánh Lễ (ví dụ: ợ hơi, la hét, ngáp, xì hơi, tặc lưỡi, lẩm bẩm).</li>
+  <li>Đúng giờ, tham dự đầy đủ, tham gia vào tất cả các hoạt động do Ban Lãnh Đạo TNTT tạo ra và tất cả các hoạt động của nhà thờ/cộng đồng do Ban Lãnh Đạo Cộng Đồng yêu cầu, và thể hiện một hình mẫu nhân vật Kitô hữu tốt cho những người trẻ hơn bạn bằng cách sống theo các Ân Huệ của Chúa Thánh Thần và các việc lành phúc đức.</li>
+  <li>Mặc đồng phục TNTT đã được Ban Lãnh Đạo TNTT chấp thuận: áo sơ mi trắng có logo TNTT, quần/quần short/váy màu xanh, khăn quàng ngành của bạn và giày chạy bộ thoải mái. Tất cả các phần của đồng phục phải sạch sẽ và được mặc đúng cách trong suốt giờ Việt Ngữ, Giáo Lý, TNTT và Thánh Lễ. Ăn mặc luộm thuộm là không chấp nhận được.</li>
+  <li>Không mang bất kỳ loại vũ khí nào vào khuôn viên nhà thờ, ví dụ: dao, súng, bật lửa. Cũng không mang các vật phẩm bất hợp pháp vào khuôn viên nhà thờ, ví dụ: ma túy, tạp chí không phải Kitô giáo, bài Tây.</li>
+  <li>Giữ tay và chân cho bản thân: chăm sóc tài sản của nhà thờ và TNTT và tôn trọng ranh giới cá nhân của người khác.</li>
+  <li>Tránh các mục tiêu không phải TNTT, ví dụ: các mối quan hệ tình cảm, các nhóm bạn không lành mạnh, trốn học để đi trung tâm thương mại/xem phim/mua sắm/"nhà bạn bè".</li>
+  <li>Không nói xấu (tức là, thảo luận thông tin cá nhân không có thật về người khác khi họ không có mặt), không cãi vã/quấy rối/trêu chọc, không tranh cãi (tức là, ngắt lời nhau, lớn tiếng, hành vi chế nhạo, chỉ trỏ), không chửi rủa/nguyền rủa/báng bổ sẽ được cho phép trong thời gian TNTT.</li>
+  <li>Cấm tiếp xúc một-đối-một giữa người lớn (huynh trưởng) và thanh thiếu niên. Trong các tình huống yêu cầu hội đàm cá nhân, chẳng hạn như hội đàm với huynh trưởng, cuộc họp phải được tiến hành trước sự chứng kiến của những người lớn và thanh thiếu niên khác.</li>
+  <li>Không có hành vi lạm dụng. Lạm dụng thể chất và nghi thức gia nhập bị cấm và không được đưa vào bất kỳ hoạt động nào của TNTT. Bắt nạt bằng lời nói, thể chất và trên mạng cũng bị cấm.</li>
+</ol>
+<strong>HẬU QUẢ KHI VI PHẠM MỘT TRONG 10 QUY TẮC TRÊN</strong>
+<ol>
+  <li>Huynh Trưởng phụ trách, tức là Đoàn Trưởng hoặc Ngành Trưởng sẽ đưa ra lời khuyên/cảnh báo riêng.</li>
+  <li>Đoàn Trưởng và Ban Lãnh Đạo sẽ cảnh báo trong cuộc họp Hội Đồng Huynh Trưởng nếu người đó là một huynh trưởng, Ngành Trưởng sẽ cảnh báo trong ngành nếu người đó là một đoàn sinh.</li>
+  <li>Linh mục sẽ nói chuyện với toàn thể Đoàn TNTT về người vi phạm và loại người đó ra khỏi TNTT.</li>
+</ol>`,
         tntt_rules_signature_content: `Tôi hiểu và đồng ý tuân theo các quy tắc trên. Tôi sẽ tôn trọng và yêu mến Chúa, bản thân và những người khác.`,
         rules_signature_required: `Vui lòng ký tên để xác nhận rằng bạn đã đọc và đồng ý với nội quy.`,
 
@@ -393,7 +411,25 @@ export const translations = {
         // ==================== VEYM RULES ====================
         tntt_rules_title: "VEYM Rules",
         tntt_rules_agree_label: "I have read and agree.",
-        tntt_rules_content: `...`, // Giữ nguyên nội dung
+        tntt_rules_content: `<strong>VIETNAMESE EUCHARISTIC YOUTH MOVEMENT’S (VEYM/TNTT) RULES</strong>
+<ol>
+  <li>Obey the authority and follow the instructions of your nganh’s youth leaders, squad leader and chaplain. Show respect and be polite toward all those older than you since they replace the role of your parents when you are not at home. Take care of and sacrifice for those younger than you since they are your younger brothers and sisters through Christ.</li>
+  <li>Make words such as: “please”, “thank you”, “may I help?”, “you are welcome”, “yes”, “no”, “I don’t understand” and “I’m sorry” part of your regular speech. “Thưa”, “dạ”, “có” and “vâng” are even better. Do not use words such as: “huh?”, “yeah”, “uh huh”, “OK”, “whatever”, “sure” and “hmmmmm?”. No inappropriate body sounds during any activities, especially Mass (e.g., burping, yelling, yawning, flatulating, clicking tongue, humming to self).</li>
+  <li>Be on time, have good attendance, participate in all activities created by the VEYM Leadership Team and all church/community’s activities requested by the Community Leadership Team, and demonstrate and exemplify a good model of Christian character for those younger than you by living out the Gifts of the Holy Spirit and the spiritual and corporeal works of mercy.</li>
+  <li>Wear VEYM uniform approved by VEYM Leadership Team: white VEYM logo dress shirt, blue pants/shorts/skirt, scarf for your nganh, and comfortable running shoes. All parts of appropriate uniform must be clean and properly on at all times during Vietnamese Language, Catechism, VEYM and Mass times. Slovenly appearance is not acceptable.</li>
+  <li>Do not bring any kind of weapon onto church property, e.g., knives, guns, lighters. Do not bring illegal items onto church property either, e.g., drugs, un-Christian magazines, playing cards.</li>
+  <li>Keep your hands and feet to yourself: take care of church and VEYM property and respect the personal boundaries of others.</li>
+  <li>Avoid non-VEYM goals, e.g., storage/philios/eros love relationships, social cliques, truancy to go to mall/movies/shopping/“friend’s home”.</li>
+  <li>No gossiping (i.e., discussing nonfactual personal information about others without them being there), no fighting/harassing/teasing, no arguing (i.e., interrupting each other, raising voices, mocking behavior, pointing), no cursing/swearing/blasphemy will be allowed during VEYM time.</li>
+  <li>One-on-one contact between adults (youth leader) and youth prohibited. One-on-one contact between adults and youth members is not permitted. In situations that require personal conferences, such as a leader conference, the meeting is to be conducted in view of other adults and youths.</li>
+  <li>No hazing. Physical hazing and initiations are prohibited and may not be included as part of any VEYM activity. Verbal, physical, and cyberbullying are also prohibited.</li>
+</ol>
+<strong>CONSEQUENCES OF BREAKING 1 OF THE 10 RULES ABOVE</strong>
+<ol>
+  <li>The responsible youth leader, i.e., Squad Leader or Nganh Leader will give private warning/advice.</li>
+  <li>The Squad Leader and the Leadership Team will warn in the Youth Leaders' Council meeting if he/she is a youth leader, the Nganh Leader will warn in the nganh if he/she is a youth member.</li>
+  <li>The priest will talk with the entire VEYM about the wrongdoer and expel him/her out of the Eucharistic Youth.</li>
+</ol>`, // Giữ nguyên nội dung
         tntt_rules_signature_content: `I understand and agree to follow the above rules. I will respect and love God, myself, and others.`,
         rules_signature_required: `Please sign to confirm that you have read and agreed to the rules.`,
 

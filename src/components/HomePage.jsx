@@ -17,7 +17,7 @@ function HomePage() {
 
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <LanguageSwitcher />
+      
       <h1>{t('homepage_title')}</h1>
       <p>{t('homepage_subtitle')}</p>
       <button onClick={handleRegistrationClick} style={{ margin: '10px', padding: '10px 20px', fontSize: '16px' }}>
