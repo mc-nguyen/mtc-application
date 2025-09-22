@@ -2,6 +2,10 @@
 import React, { useState } from 'react';
 import { Document, Page, Text, View, StyleSheet, pdf, Image, Font } from '@react-pdf/renderer';
 
+// Import hình ảnh từ thư mục assets
+import tnttLogo from '../assets/tntt.png';
+import churchLogo from '../assets/favicon.png';
+
 // // Đăng ký font hỗ trợ tiếng Việt
 Font.register({
     family: 'Roboto',
@@ -67,12 +71,12 @@ const styles = StyleSheet.create({
         marginBottom: 1,
     },
     headerIcon: {
-        width: 40,
-        height: 40,
+        width: 70,
+        height: 70,
         marginHorizontal: 10,
     },
     section: {
-        marginBottom: 15,
+        marginBottom: 5,
     },
     sectionTitle: {
         fontSize: 14,
@@ -184,7 +188,7 @@ const PDFHeader = () => (
         {/* Left Icon - TNTT Logo */}
         <Image
             style={styles.headerIcon}
-            src="https://via.placeholder.com/40x40/4facfe/ffffff?text=TNTT"
+            src={tnttLogo}
         />
 
         <View style={styles.headerContent}>
@@ -199,7 +203,7 @@ const PDFHeader = () => (
         {/* Right Icon - Church Logo */}
         <Image
             style={styles.headerIcon}
-            src="https://via.placeholder.com/40x40/28a745/ffffff?text=GP"
+            src={churchLogo}
         />
     </View>
 );
@@ -554,7 +558,7 @@ const Page5TNTTRules = ({ member }) => (
         </View>
 
         <View style={styles.waiverSection}>
-            <Text style={styles.note}>
+            <Text style={styles.waiverAgreement}>
                 I understand and agree to follow the above rules. I will respect and love God, myself, and others.
             </Text>
             <Image
