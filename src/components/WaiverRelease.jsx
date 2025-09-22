@@ -39,6 +39,16 @@ const WaiverRelease = forwardRef(({ formData, setFormData }, ref) => {
     }));
   };
 
+  const handleSignatureChangeName = (name) => {
+    setFormData(prev => ({
+      ...prev,
+      waiverRelease: {
+        ...prev.waiverRelease,
+        signatureName: name,
+      },
+    }));
+  };
+
   const initialSections = t('waiver_sections_with_initials');
   const nameToDisplay = formData.isAdult ? participantName : parentName;
 
@@ -112,6 +122,7 @@ const WaiverRelease = forwardRef(({ formData, setFormData }, ref) => {
           content={t('waiver_content')}
           signerName={nameToDisplay}
           onSign={handleSignatureChange}
+          changeName={handleSignatureChangeName}
           existingSignature={formData.waiverRelease.signature}
         />
         {showErrors && !formData.waiverRelease.signature && (

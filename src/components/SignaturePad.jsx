@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import SignatureCanvas from 'react-signature-canvas';
 
-function SignaturePad({ content, signerName, onSign, existingSignature }) {
+function SignaturePad({ content, signerName, onSign, changeName, existingSignature }) {
   const sigCanvas = useRef({});
   const [isSigned, setIsSigned] = useState(!!existingSignature);
   const [currentSignerName, setCurrentSignerName] = useState(signerName || '');
@@ -18,8 +18,9 @@ function SignaturePad({ content, signerName, onSign, existingSignature }) {
   useEffect(() => {
     if (signerName && signerName !== currentSignerName) {
       setCurrentSignerName(signerName);
+      changeName(signerName);
     }
-  }, [signerName, currentSignerName]);
+  }, [signerName, currentSignerName, changeName]);
 
   const clearSignature = () => {
     sigCanvas.current.clear();
@@ -36,7 +37,7 @@ function SignaturePad({ content, signerName, onSign, existingSignature }) {
   };
 
   const handleNameChange = (e) => {
-    setCurrentSignerName(e.target.value);
+    changeName(e.target.value);
   };
 
   return (

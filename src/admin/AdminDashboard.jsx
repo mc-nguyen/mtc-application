@@ -4,6 +4,7 @@ import { collection, getDocs, query, orderBy, deleteDoc, doc, updateDoc } from '
 import { db } from '../config/firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebaseConfig';
+import PDFGenerator from './PDFGenerator';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('members');
@@ -72,14 +73,14 @@ const AdminDashboard = () => {
   const handleDelete = async (id, type) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa bản ghi này?')) {
       try {
-        const collectionPath = type === 'member' 
+        const collectionPath = type === 'member'
           ? collection(db, 'artifacts', 'mtc-applications', 'public', 'data', 'formSubmissions')
           : collection(db, 'artifacts', 'mtc-applications', 'public', 'data', 'campSubmissions');
-        
+
         await deleteDoc(doc(collectionPath, id));
         fetchData();
         alert('Xóa thành công!');
-        
+
         if (type === 'member' && selectedMember && selectedMember.id === id) {
           setSelectedMember(null);
         } else if (type === 'camp' && selectedCamp && selectedCamp.id === id) {
@@ -98,18 +99,18 @@ const AdminDashboard = () => {
       await updateDoc(memberRef, {
         paid: !currentPaidStatus
       });
-      
+
       // Update local state
-      setMembers(members.map(member => 
-        member.id === memberId 
+      setMembers(members.map(member =>
+        member.id === memberId
           ? { ...member, paid: !currentPaidStatus }
           : member
       ));
-      
+
       if (selectedMember && selectedMember.id === memberId) {
         setSelectedMember({ ...selectedMember, paid: !currentPaidStatus });
       }
-      
+
       alert('Cập nhật trạng thái thanh toán thành công!');
     } catch (error) {
       console.error('Lỗi khi cập nhật:', error);
@@ -123,18 +124,18 @@ const AdminDashboard = () => {
       await updateDoc(campRef, {
         paid: !currentPaidStatus
       });
-      
+
       // Update local state
-      setCamps(camps.map(camp => 
-        camp.id === campId 
+      setCamps(camps.map(camp =>
+        camp.id === campId
           ? { ...camp, paid: !currentPaidStatus }
           : camp
       ));
-      
+
       if (selectedCamp && selectedCamp.id === campId) {
         setSelectedCamp({ ...selectedCamp, paid: !currentPaidStatus });
       }
-      
+
       alert('Cập nhật trạng thái thanh toán thành công!');
     } catch (error) {
       console.error('Lỗi khi cập nhật:', error);
@@ -172,7 +173,7 @@ const AdminDashboard = () => {
             ← Quay lại danh sách
           </button>
         </div>
-        
+
         <div className="detail-section">
           <h5>Thông tin cá nhân</h5>
           <p><strong>Tên Thánh:</strong> {member.mainInfo?.saintName || 'N/A'}</p>
@@ -216,7 +217,7 @@ const AdminDashboard = () => {
         {member.paymentInfo && (
           <div className="detail-section">
             <h5>Thanh toán</h5>
-            <p><strong>Trạng thái:</strong> 
+            <p><strong>Trạng thái:</strong>
               <span className={member.paid ? 'status-paid' : 'status-unpaid'}>
                 {member.paid ? ' Đã thanh toán' : ' Chưa thanh toán'}
               </span>
@@ -234,9 +235,9 @@ const AdminDashboard = () => {
           {member.mainInfo?.participantSignature && (
             <div>
               <p><strong>Chữ ký đoàn sinh:</strong></p>
-              <img 
-                src={member.mainInfo.participantSignature} 
-                alt="Chữ ký đoàn sinh" 
+              <img
+                src={member.mainInfo.participantSignature}
+                alt="Chữ ký đoàn sinh"
                 className="signature-image"
               />
             </div>
@@ -244,9 +245,9 @@ const AdminDashboard = () => {
           {member.mainInfo?.parentSignature && (
             <div>
               <p><strong>Chữ ký phụ huynh:</strong></p>
-              <img 
-                src={member.mainInfo.parentSignature} 
-                alt="Chữ ký phụ huynh" 
+              <img
+                src={member.mainInfo.parentSignature}
+                alt="Chữ ký phụ huynh"
                 className="signature-image"
               />
             </div>
@@ -260,13 +261,20 @@ const AdminDashboard = () => {
         </div>
 
         <div className="detail-actions">
-          <button 
+          <PDFGenerator data={member} type="member" />
+          <button
+            onClick={() => handleDelete(member.id, 'member')}
+            className="delete-btn"
+          >
+            Xóa đăng ký trại
+          </button>
+          <button
             onClick={() => handlePaidToggle(member.id, member.paid || false)}
             className={member.paid ? 'paid-btn' : 'unpaid-btn'}
           >
             {member.paid ? 'Đánh dấu chưa thanh toán' : 'Đánh dấu đã thanh toán'}
           </button>
-          <button 
+          <button
             onClick={() => handleDelete(member.id, 'member')}
             className="delete-btn"
           >
@@ -288,7 +296,7 @@ const AdminDashboard = () => {
             ← Quay lại danh sách
           </button>
         </div>
-        
+
         <div className="detail-section">
           <h5>Thông tin cá nhân</h5>
           <p><strong>Tên Thánh:</strong> {camp.mainInfo?.saintName || 'N/A'}</p>
@@ -331,7 +339,7 @@ const AdminDashboard = () => {
         {camp.paymentInfo && (
           <div className="detail-section">
             <h5>Thanh toán</h5>
-            <p><strong>Trạng thái:</strong> 
+            <p><strong>Trạng thái:</strong>
               <span className={camp.paid ? 'status-paid' : 'status-unpaid'}>
                 {camp.paid ? ' Đã thanh toán' : ' Chưa thanh toán'}
               </span>
@@ -346,9 +354,9 @@ const AdminDashboard = () => {
           {camp.mainInfo?.participantSignature && (
             <div>
               <p><strong>Chữ ký đoàn sinh:</strong></p>
-              <img 
-                src={camp.mainInfo.participantSignature} 
-                alt="Chữ ký đoàn sinh" 
+              <img
+                src={camp.mainInfo.participantSignature}
+                alt="Chữ ký đoàn sinh"
                 className="signature-image"
               />
             </div>
@@ -356,9 +364,9 @@ const AdminDashboard = () => {
           {camp.mainInfo?.parentSignature && (
             <div>
               <p><strong>Chữ ký phụ huynh:</strong></p>
-              <img 
-                src={camp.mainInfo.parentSignature} 
-                alt="Chữ ký phụ huynh" 
+              <img
+                src={camp.mainInfo.parentSignature}
+                alt="Chữ ký phụ huynh"
                 className="signature-image"
               />
             </div>
@@ -373,13 +381,14 @@ const AdminDashboard = () => {
         </div>
 
         <div className="detail-actions">
-          <button 
+          <PDFGenerator data={camp} type="camp" />
+          <button
             onClick={() => handleCampPaidToggle(camp.id, camp.paid || false)}
             className={camp.paid ? 'paid-btn' : 'unpaid-btn'}
           >
             {camp.paid ? 'Đánh dấu chưa thanh toán' : 'Đánh dấu đã thanh toán'}
           </button>
-          <button 
+          <button
             onClick={() => handleDelete(camp.id, 'camp')}
             className="delete-btn"
           >
@@ -440,13 +449,13 @@ const AdminDashboard = () => {
       </div>
 
       <div className="admin-tabs">
-        <button 
+        <button
           className={activeTab === 'members' ? 'active' : ''}
           onClick={() => { setActiveTab('members'); setCurrentPage(1); setSelectedMember(null); }}
         >
           Thành viên ({members.length})
         </button>
-        <button 
+        <button
           className={activeTab === 'camps' ? 'active' : ''}
           onClick={() => { setActiveTab('camps'); setCurrentPage(1); setSelectedCamp(null); }}
         >
@@ -477,8 +486,8 @@ const AdminDashboard = () => {
                   </thead>
                   <tbody>
                     {currentMembers.map((member) => (
-                      <tr 
-                        key={member.id} 
+                      <tr
+                        key={member.id}
                         className={selectedMember?.id === member.id ? 'selected' : ''}
                         onClick={() => handleMemberClick(member)}
                       >
@@ -492,7 +501,7 @@ const AdminDashboard = () => {
                           </span>
                         </td>
                         <td onClick={(e) => e.stopPropagation()}>
-                          <button 
+                          <button
                             className="delete-btn"
                             onClick={() => handleDelete(member.id, 'member')}
                           >
@@ -507,13 +516,13 @@ const AdminDashboard = () => {
                 {/* Pagination */}
                 {totalPages > 1 && (
                   <div className="pagination">
-                    <button 
-                      onClick={() => paginate(currentPage - 1)} 
+                    <button
+                      onClick={() => paginate(currentPage - 1)}
                       disabled={currentPage === 1}
                     >
                       ←
                     </button>
-                    
+
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                       <button
                         key={page}
@@ -523,9 +532,9 @@ const AdminDashboard = () => {
                         {page}
                       </button>
                     ))}
-                    
-                    <button 
-                      onClick={() => paginate(currentPage + 1)} 
+
+                    <button
+                      onClick={() => paginate(currentPage + 1)}
                       disabled={currentPage === totalPages}
                     >
                       →
@@ -558,8 +567,8 @@ const AdminDashboard = () => {
                   </thead>
                   <tbody>
                     {currentCamps.map((camp) => (
-                      <tr 
-                        key={camp.id} 
+                      <tr
+                        key={camp.id}
                         className={selectedCamp?.id === camp.id ? 'selected' : ''}
                         onClick={() => handleCampClick(camp)}
                       >
@@ -572,7 +581,7 @@ const AdminDashboard = () => {
                           </span>
                         </td>
                         <td onClick={(e) => e.stopPropagation()}>
-                          <button 
+                          <button
                             className="delete-btn"
                             onClick={() => handleDelete(camp.id, 'camp')}
                           >
@@ -587,13 +596,13 @@ const AdminDashboard = () => {
                 {/* Pagination */}
                 {totalPages > 1 && (
                   <div className="pagination">
-                    <button 
-                      onClick={() => paginate(currentPage - 1)} 
+                    <button
+                      onClick={() => paginate(currentPage - 1)}
                       disabled={currentPage === 1}
                     >
                       ←
                     </button>
-                    
+
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                       <button
                         key={page}
@@ -603,9 +612,9 @@ const AdminDashboard = () => {
                         {page}
                       </button>
                     ))}
-                    
-                    <button 
-                      onClick={() => paginate(currentPage + 1)} 
+
+                    <button
+                      onClick={() => paginate(currentPage + 1)}
                       disabled={currentPage === totalPages}
                     >
                       →

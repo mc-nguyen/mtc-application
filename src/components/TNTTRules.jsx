@@ -16,6 +16,16 @@ const TNTTRules = forwardRef(({ formData, setFormData }, ref) => {
     }));
   };
 
+  const handleSignatureChangeName = (name) => {
+    setFormData(prev => ({
+      ...prev,
+      tnttRules: {
+        ...prev.tnttRules,
+        signatureName: name,
+      },
+    }));
+  };
+
   useImperativeHandle(ref, () => ({
     validate: () => {
       const hasSignature = !!formData.tnttRules.signature;
@@ -40,6 +50,7 @@ const TNTTRules = forwardRef(({ formData, setFormData }, ref) => {
         content={t('tntt_rules_signature_content')}
         signerName={signerName}
         onSign={handleSignatureChange}
+        changeName={handleSignatureChangeName}
         existingSignature={formData.tnttRules.signature}
       />
       {showErrors && !formData.tnttRules.signature && (

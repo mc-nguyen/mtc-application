@@ -1,4 +1,4 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import SignaturePad from './SignaturePad';
 import { useLanguage } from '../LanguageContext';
 import { useNganh } from '../hooks/useNganh'; // Import hook mới
@@ -6,6 +6,17 @@ import { useNganh } from '../hooks/useNganh'; // Import hook mới
 const MainInfo = forwardRef(({ formData, setFormData, isCamp = false }, ref) => {
   const { t } = useLanguage();
   const [showErrors, setShowErrors] = useState(false);
+
+  useEffect(() => {
+    // Reset signatures if the participant type changes
+    setFormData(prev => ({ 
+      ...prev,
+      mainInfo: {
+        ...prev.mainInfo,
+        nganh: prev.isAdult ? prev.mainInfo.nganh : '', // Clear nganh if not adult
+      }
+    }));
+  }, [formData.isAdult, setFormData]); 
 
   // Sử dụng custom hook để lấy tuổi và ngành
   const { nganh: participantNganh } = useNganh(formData.dob);
@@ -31,12 +42,32 @@ const MainInfo = forwardRef(({ formData, setFormData, isCamp = false }, ref) => 
     }));
   };
 
+  const handleParticipantSignatureName = (name) => {
+    setFormData(prev => ({
+      ...prev,
+      mainInfo: {
+        ...prev.mainInfo,
+        participantSignatureName: name,
+      },
+    }));
+  };
+
   const handleParentSignature = (dataUrl) => {
     setFormData(prev => ({
       ...prev,
       mainInfo: {
         ...prev.mainInfo,
         parentSignature: dataUrl,
+      },
+    }));
+  };
+
+  const handleParentSignatureName = (name) => {
+    setFormData(prev => ({
+      ...prev,
+      mainInfo: {
+        ...prev.mainInfo,
+        parentSignatureName: name,
       },
     }));
   };
@@ -187,6 +218,7 @@ const MainInfo = forwardRef(({ formData, setFormData, isCamp = false }, ref) => 
         }} />}
         signerName={formData.mainInfo.givenName}
         onSign={handleParticipantSignature}
+        changeName={handleParticipantSignatureName}
         existingSignature={formData.mainInfo.participantSignature}
       />
       {showErrors && !formData.mainInfo.participantSignature && (
@@ -199,6 +231,7 @@ const MainInfo = forwardRef(({ formData, setFormData, isCamp = false }, ref) => 
             content={<div dangerouslySetInnerHTML={{ __html: t('main_info_parent_signature_content') }} />}
             signerName={formData.mainInfo.fatherName || formData.mainInfo.motherName}
             onSign={handleParentSignature}
+            changeName={handleParentSignatureName}
             existingSignature={formData.mainInfo.parentSignature}
           />
           {showErrors && !formData.mainInfo.parentSignature && (

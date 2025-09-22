@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../LanguageContext';
-import LanguageSwitcher from './LanguageSwitcher';
 
 function HomePage() {
   const navigate = useNavigate();
