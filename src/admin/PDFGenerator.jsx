@@ -32,14 +32,14 @@ const styles = StyleSheet.create({
     page: {
         flexDirection: 'column',
         backgroundColor: '#FFFFFF',
-        padding: 15,
+        padding: 10,
         fontFamily: 'Roboto', // Sử dụng font đã đăng ký
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 20,
+        marginBottom: 10,
         paddingBottom: 15,
         borderBottom: '2 solid #4facfe',
     },
@@ -272,7 +272,7 @@ const Page1MainInfo = ({ member, isCamp }) => (
                 )}
                 <View style={styles.row}>
                     <Text style={styles.label}>Người ký:</Text>
-                    <Text style={styles.value}>{member.mainInfo.participantSignatureName + " " + member.mainInfo.lastName || ''}</Text>
+                    <Text style={styles.value}>{member.mainInfo.participantSignatureName || ''}</Text>
                 </View>
                 <View style={styles.row}>
                     <Text style={styles.label}>Ngày ký:</Text>
