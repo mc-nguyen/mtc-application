@@ -71,6 +71,7 @@ export const useRegistrationForm = (formData, setFormData, refs) => {
         }
 
         setCurrentStep(prev => prev + 1);
+        // window.scrollTo({ top: 0, behavior: 'auto' });
     };
 
     const handleBack = () => {
@@ -101,7 +102,7 @@ export const useRegistrationForm = (formData, setFormData, refs) => {
         if (docId) {
             console.log('Final Form data saved with ID:', docId);
             // Navigate to the thank-you page after successful save
-            navigate('/thank-you', { state: { formData: formData } });
+            navigate('/save-form', { state: { formData, isCamp:false } });
         } else {
             console.error('Failed to save form data to Firestore.');
             // Handle the error (e.g., show an error message to the user)

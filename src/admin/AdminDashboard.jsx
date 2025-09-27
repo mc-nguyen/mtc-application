@@ -1,10 +1,12 @@
 // src/admin/AdminDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { useAuth } from '../services/AuthContext';
 import { db } from '../config/firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebaseConfig';
 import PDFGenerator from './PDFGenerator';
+import { useAdminAuth } from './AdminAuthContext'; // Sử dụng context admin
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('members');
@@ -15,10 +17,15 @@ const AdminDashboard = () => {
   const [selectedCamp, setSelectedCamp] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const { currentUser, isAdmin, logout } = useAdminAuth();
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (isAdmin) {
+      fetchData();
+    } else {
+      setLoading(false);
+    }
+  }, [isAdmin]);
 
   const fetchData = async () => {
     try {
@@ -407,6 +414,20 @@ const AdminDashboard = () => {
     if (!isAdult && paymentInfo.scarf) total += 10;
     return total;
   };
+  
+  if (!isAdmin) {
+    return (
+      <div className="access-denied">
+        <h2>⚠️ Truy cập bị từ chối</h2>
+        <p>Bạn không có quyền truy cập trang quản trị.</p>
+        <p>Email hiện tại: {currentUser?.email}</p>
+        <p>Vui lòng đăng nhập với tài khoản admin</p>
+        <button onClick={logout} className="logout-btn">
+          Đăng xuất
+        </button>
+      </div>
+    );
+  }
 
   if (loading) {
     return <div className="loading">Đang tải dữ liệu...</div>;

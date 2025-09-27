@@ -219,6 +219,10 @@ export const translations = {
 
         // ==================== TRẠI BÌNH MINH ====================
         camp_form_title: "Đăng Ký Trại Bình Minh",
+
+        // ==================== LƯU ĐƠN ĐĂNG KÝ ====================
+        save_form_title: 'Lưu đơn đăng ký',
+        save_form_description: 'Bạn có muốn lưu đơn đăng ký vào tài khoản để theo dõi và sử dụng sau này?',
     },
     en: {
         // ==================== HOME PAGE & GENERAL ====================
@@ -440,5 +444,9 @@ export const translations = {
 
         // ==================== BINH MINH CAMP ====================
         camp_form_title: "Bình Minh Camp Registration",
+
+        // ==================== SAVE REGISTRATION FORM ====================
+        save_form_title: 'Save Registration Form',
+        save_form_description: 'Would you like to save this registration to your account for tracking and future use?',
     },
 };

@@ -1,45 +1,53 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './components/HomePage';
-import RegistrationForm from './components/RegistrationForm';
-import ThankYouPage from './components/ThankYouPage';
+
+// Import Language Context Provider
 import { LanguageProvider } from './LanguageContext'; // Import Provider
+import { AuthProvider } from './services/AuthContext';
+
+// Import global styles
 import './App.css';
-import CampRegistrationForm from './components/CampRegistrationForm';
-import EventsPage from './components/EventsPage';
-import AdminPage from './admin/AdminPage';
 import './admin/Admin.css';
-import LanguageSwitcher from './components/LanguageSwitcher';
+
+// Import all page components
+import AdminPage from './admin/AdminPage';
+import CampRegistrationForm from './pages/CampRegistrationForm';
+import EventsPage from './pages/EventsPage';
+import HomePage from './pages/HomePage';
+import RegistrationForm from './pages/RegistrationForm';
+import ThankYouPage from './pages/ThankYouPage';
+import SaveFormPage from './pages/SaveFormPage';
+import UserDashboard from './pages/UserDashboard';
+import LoginPage from './pages/LoginPage';
+
+// Import Header and Footer
+import Header from './components/Header';
 
 function App() {
   return (
     <div className="App">
       <LanguageProvider>
-        <header className="app-header">
-          <div className="container">
-            <div className="header-content">
-              <a href="/" className="logo">
-                <span className="logo-icon">🌟</span>
-                TNTT Mẹ Thiên Chúa
-              </a>
-              <LanguageSwitcher />
+        <AuthProvider>
+          <Router>
+            <Header />
+            <div className="App">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/registration" element={<RegistrationForm />} />
+                <Route path="/binh-minh" element={<CampRegistrationForm />} />
+                <Route path="/events" element={<EventsPage />} />
+                <Route path="/thank-you" element={<ThankYouPage />} />
+                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/save-form" element={<SaveFormPage />} />
+                <Route path="/dashboard" element={<UserDashboard />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/dashboard" element={<UserDashboard />} />
+              </Routes>
             </div>
-          </div>
-        </header>
-
-        <Router>
-          <div className="App">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/registration" element={<RegistrationForm />} />
-              <Route path="/binh-minh" element={<CampRegistrationForm />} />
-              <Route path="/events" element={<EventsPage />} />
-              <Route path="/thank-you" element={<ThankYouPage />} />
-              <Route path="/admin" element={<AdminPage />} />
-            </Routes>
-          </div>
-        </Router>
+          </Router>
+        </AuthProvider>
       </LanguageProvider>
+
 
       <footer className="app-footer">
         <div className="container">

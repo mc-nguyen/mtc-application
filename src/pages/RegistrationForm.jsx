@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
-import StepIndicator from './StepIndicator';
-import MainInfo from './MainInfo';
-import PaymentInfo from './PaymentInfo';
-import HealthInfo from './HealthInfo';
-import WaiverRelease from './WaiverRelease';
-import TNTTRules from './TNTTRules';
+import React, { useState, useRef, useEffect } from 'react';
+import StepIndicator from '../components/StepIndicator';
+import MainInfo from '../components/MainInfo';
+import PaymentInfo from '../components/PaymentInfo';
+import HealthInfo from '../components/HealthInfo';
+import WaiverRelease from '../components/WaiverRelease';
+import TNTTRules from '../components/TNTTRules';
 import { useLanguage } from '../LanguageContext';
 import { useRegistrationForm } from '../hooks/useRegistrationForm'; // Import custom hook mới
 
@@ -36,6 +36,12 @@ function RegistrationForm() {
     handleDobChange,
     handleSubmit,
   } = useRegistrationForm(formData, setFormData, refs);
+
+  // Scroll to top on step change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentStep]);
+
 
   const renderStepComponent = () => {
     switch (currentStep) {

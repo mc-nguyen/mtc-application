@@ -29,6 +29,8 @@ export const useCampRegistrationForm = (formData, setFormData, refs) => {
     ];
 
     const handleNext = () => {
+        let valid = true;
+
         if (currentStep === 0) {
             if (!formData.dob) {
                 alert(t('required_field_alert') + t('dob_label'));
@@ -68,6 +70,7 @@ export const useCampRegistrationForm = (formData, setFormData, refs) => {
         }
 
         setCurrentStep(prev => prev + 1);
+        // window.scrollTo({ top: 0, behavior: 'auto' });
     };
 
     const handleBack = () => {
@@ -97,12 +100,7 @@ export const useCampRegistrationForm = (formData, setFormData, refs) => {
 
         if (docId) {
             console.log('Camp registration saved with ID:', docId);
-            navigate('/thank-you', {
-                state: {
-                    formData: formData,
-                    isCamp: true // Flag để ThankYouPage hiển thị khác
-                }
-            });
+            navigate('/save-form', { state: { formData, isCamp:true } });
         } else {
             console.error('Failed to save camp registration data.');
             alert('Có lỗi xảy ra khi lưu đơn đăng ký trại. Vui lòng thử lại.');

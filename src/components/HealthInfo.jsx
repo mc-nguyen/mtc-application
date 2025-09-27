@@ -16,7 +16,7 @@ const HealthInfo = forwardRef(({ formData, setFormData }, ref) => {
       },
     }));
   };
-  
+
   const handleEmergencyContactChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -58,6 +58,14 @@ const HealthInfo = forwardRef(({ formData, setFormData }, ref) => {
         setShowErrors(false);
       }
       return isValid;
+    },
+    getErrors: () => {
+      const { gender, emergencyContact } = formData.healthInfo;
+      const errs = {};
+      if (!gender) errs.gender = t('gender_required');
+      if (!emergencyContact.name) errs.name = t('emergency_contact_name_required');
+      // …
+      return errs;
     }
   }));
 
@@ -65,7 +73,7 @@ const HealthInfo = forwardRef(({ formData, setFormData }, ref) => {
     <div className="form-section">
       {/* 1. Phần thông tin Đoàn sinh */}
       <h2>{t('participant_info_title')}</h2>
-      
+
       <div className="input-group-row">
         <div>
           <label>{t('main_info_last_name')}</label>
@@ -76,7 +84,7 @@ const HealthInfo = forwardRef(({ formData, setFormData }, ref) => {
           <input type="text" value={formData.mainInfo.givenName || ''} disabled />
         </div>
       </div>
-      
+
       <div className="input-group-row">
         <div>
           <label>{t('main_info_city')}</label>
@@ -142,10 +150,10 @@ const HealthInfo = forwardRef(({ formData, setFormData }, ref) => {
       </div>
 
       <hr />
-      
+
       {/* 2. Phần thông tin y tế */}
       <h2>{t('health_info_section_title')}</h2>
-      
+
       <div className="input-group-row">
         <div>
           <label>{t('doctor_label')}</label>
@@ -185,17 +193,17 @@ const HealthInfo = forwardRef(({ formData, setFormData }, ref) => {
         <label>{t('health_chronic_concerns_label')}</label>
         <textarea name="chronicConcerns" value={formData.healthInfo.chronicConcerns || ''} onChange={handleHealthInfoChange} rows="4"></textarea>
       </div>
-      
+
       <div>
         <label>{t('health_physical_restrictions_label')}</label>
         <textarea name="physicalRestrictions" value={formData.healthInfo.physicalRestrictions || ''} onChange={handleHealthInfoChange} rows="4"></textarea>
       </div>
 
       <hr />
-      
+
       {/* 3. Phần liên hệ khẩn cấp */}
       <h2>{t('emergency_contact_title')}</h2>
-      
+
       <div className="input-group-row">
         <div>
           <label>{t('emergency_contact_name_label')}*</label>

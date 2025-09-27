@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../config/firebaseConfig';
 import AdminLogin from './AdminLogin';
 import AdminDashboard from './AdminDashboard';
+import { AdminAuthProvider } from './AdminAuthContext'; // Sử dụng context riêng
 
 const AdminPage = () => {
   const [user, setUser] = useState(null);
@@ -24,11 +25,13 @@ const AdminPage = () => {
 
   return (
     <div className="admin-page">
-      {user ? (
-        <AdminDashboard />
-      ) : (
-        <AdminLogin onLogin={() => setUser(auth.currentUser)} />
-      )}
+      <AdminAuthProvider>
+        {user ? (
+          <AdminDashboard />
+        ) : (
+          <AdminLogin onLogin={() => setUser(auth.currentUser)} />
+        )}
+      </AdminAuthProvider>
     </div>
   );
 };
