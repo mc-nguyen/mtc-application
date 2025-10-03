@@ -1,0 +1,89 @@
+/* HomePage.css - Dễ thương, Mềm mại, Responsive */
+
+:root {
+    --primary-color: #ff9aa2;
+    --secondary-color: #b5e4ff;
+    --text-color: #333;
+    --bg-color: #f7f3f3;
+}
+
+.home-page {
+    text-align: center;
+    padding: 80px 20px;
+    background-color: var(--bg-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-page h1 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 3.5em;
+    font-family: 'Pacifico', cursive;
+    animation: slideDown 1s ease-out;
+}
+
+.home-page p {
+    color: var(--text-color);
+    font-size: 1.3em;
+    margin-bottom: 40px;
+    max-width: 600px;
+}
+
+.home-page button {
+    padding: 15px 30px;
+    font-size: 1.1em;
+    margin: 15px;
+    border: none;
+    border-radius: 15px; /* Bo tròn lớn */
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.home-page button:hover {
+    transform: translateY(-5px) scale(1.05); /* Nảy lên khi hover */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.primary-btn:hover {
+    background-color: #f07b85;
+}
+
+.secondary-btn {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.secondary-btn:hover {
+    background-color: #92c7e0;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .home-page h1 {
+        font-size: 2.5em;
+    }
+    .home-page p {
+        font-size: 1em;
+    }
+    .home-page button {
+        width: 80%;
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+}

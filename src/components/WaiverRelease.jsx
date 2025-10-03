@@ -2,6 +2,7 @@ import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import SignaturePad from './SignaturePad';
 import { useLanguage } from '../LanguageContext';
 import { generateWaiverInitials, validateWaiver } from '../utils/waiverUtils'; // Import các hàm tiện ích
+import './FormSection.css';
 
 const WaiverRelease = forwardRef(({ formData, setFormData }, ref) => {
   const { t } = useLanguage();
@@ -74,6 +75,7 @@ const WaiverRelease = forwardRef(({ formData, setFormData }, ref) => {
             value={parentName}
             onChange={handleParentNameChange}
             required
+            className="form-section__input"
           />
           {showErrors && (!parentName || parentName.trim() === '') && (
             <p className="required-message">{t('parent_name_required')}</p>

@@ -22,6 +22,7 @@ import LoginPage from './pages/LoginPage';
 
 // Import Header and Footer
 import Header from './components/Header';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -44,23 +45,12 @@ function App() {
                 <Route path="/dashboard" element={<UserDashboard />} />
               </Routes>
             </div>
+            <Footer />
           </Router>
         </AuthProvider>
       </LanguageProvider>
 
 
-      <footer className="app-footer">
-        <div className="container">
-          <div className="footer-content">
-            <p>&copy; 2025 TNTT Mẹ Thiên Chúa. All rights reserved.</p>
-            <div className="footer-links">
-              <a href="/privacy">Privacy Policy</a>
-              <a href="/terms">Terms of Service</a>
-              <a href="/contact">Contact</a>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div >
   );
 }

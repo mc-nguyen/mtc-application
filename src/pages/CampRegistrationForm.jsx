@@ -5,6 +5,7 @@ import HealthInfo from '../components/HealthInfo';
 import WaiverRelease from '../components/WaiverRelease';
 import { useLanguage } from '../LanguageContext';
 import { useCampRegistrationForm } from '../hooks/useCampRegistrationForm';
+import './CampRegistrationForm.css'; // Đảm bảo import file CSS mới
 
 function CampRegistrationForm() {
   const { t } = useLanguage();
@@ -12,7 +13,6 @@ function CampRegistrationForm() {
   const healthInfoRef = useRef(null);
   const waiverReleaseRef = useRef(null);
 
-  // FORM DATA RIÊNG CHO CAMP - có thể có field khác
   const [formData, setFormData] = useState({
     dob: '',
     isAdult: false,
@@ -46,18 +46,18 @@ function CampRegistrationForm() {
     switch (currentStep) {
       case 0:
         return (
-          <div className="form-section">
-            <h2>{t('camp_dob_step_title')}</h2>
-            <label>{t('dob_label')}</label>
-            <input type="date" value={formData.dob} onChange={handleDobChange} required />
-          </div>
+          <section className="form-step-section">
+            <h2 className="form-step-title">{t('camp_dob_step_title')}</h2>
+            <label className="form-label">{t('dob_label')}</label>
+            <input type="date" value={formData.dob} onChange={handleDobChange} className="form-input" required />
+          </section>
         );
       case 1:
         return <MainInfo
           ref={mainInfoRef}
           formData={formData}
           setFormData={setFormData}
-          isCamp={true} // Truyền prop để component biết là camp
+          isCamp={true}
         />;
       case 2:
         return <HealthInfo
@@ -70,7 +70,7 @@ function CampRegistrationForm() {
           ref={waiverReleaseRef}
           formData={formData}
           setFormData={setFormData}
-          isCamp={true} // Truyền prop để component biết là camp
+          isCamp={true}
         />;
       default:
         return null;
@@ -78,22 +78,22 @@ function CampRegistrationForm() {
   };
 
   return (
-    <div className="registration-container">
-      <h1>{t('camp_form_title')}</h1>
+    <section className="camp-form">
+      <h1 className="form-title">{t('camp_form_title')}</h1>
       <StepIndicator currentStep={currentStep} steps={steps} />
       {renderStepComponent()}
 
-      <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
+      <div className="form-controls">
         {currentStep > 0 && <button type="button" onClick={handleBack}>{t('back_btn')}</button>}
         {currentStep < steps.length - 1 ? (
-          <button type="button" onClick={handleNext} style={{ marginLeft: 'auto' }}>{t('next_btn')}</button>
+          <button type="button" onClick={handleNext} className="next-btn">{t('next_btn')}</button>
         ) : (
-          <button type="button" onClick={handleSubmit} style={{ backgroundColor: '#28a745', marginLeft: 'auto' }}>
+          <button type="button" onClick={handleSubmit} className="submit-btn">
             {t('submit_btn')}
           </button>
         )}
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -268,7 +268,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="detail-actions">
-          <PDFGenerator data={member} type="member" />
+          <PDFGenerator formData={member} isCamp={false} />
           <button
             onClick={() => handleDelete(member.id, 'member')}
             className="delete-btn"
@@ -388,7 +388,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="detail-actions">
-          <PDFGenerator data={camp} type="camp" />
+          <PDFGenerator formData={camp} isCamp={true} />
           <button
             onClick={() => handleCampPaidToggle(camp.id, camp.paid || false)}
             className={camp.paid ? 'paid-btn' : 'unpaid-btn'}

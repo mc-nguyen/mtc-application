@@ -1,0 +1,147 @@
+/* CampRegistrationForm.css - Dễ thương, Mềm mại, Responsive */
+
+:root {
+    --primary-color: #ff9aa2; /* Hồng đào - Cute */
+    --secondary-color: #b5e4ff; /* Xanh pastel */
+    --accent-color: #f7b267; /* Cam nhẹ */
+    --text-color: #333;
+    --bg-color: #f7f3f3; /* Nền trắng sữa */
+}
+
+body {
+    background-color: var(--bg-color);
+}
+
+.camp-form {
+    max-width: 90%;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 20px; /* Bo tròn mềm mại */
+    transition: all 0.5s ease-out;
+}
+
+.form-title {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    font-size: 2em;
+    font-family: 'Pacifico', cursive; /* Font chữ dễ thương (cần import font) */
+}
+
+.form-step-section {
+    padding: 25px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 15px;
+    margin-top: 25px;
+    background-color: var(--secondary-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.8s ease-out; /* Animation khi hiển thị */
+}
+
+.form-step-title {
+    color: var(--text-color);
+    border-bottom: 3px solid var(--primary-color);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.form-label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 1.05em;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 2px solid #ddd;
+    border-radius: 10px; /* Input bo tròn */
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 154, 162, 0.5);
+}
+
+.form-controls {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px; /* Khoảng cách giữa các nút */
+}
+
+.form-controls button {
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease, transform 0.2s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-controls button:hover {
+    transform: translateY(-2px); /* Hiệu ứng nhấn */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.form-controls button:first-child { /* Back button */
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.form-controls button:first-child:hover {
+    background-color: #e5954a;
+}
+
+.form-controls .next-btn {
+    background-color: var(--primary-color);
+    color: white;
+    margin-left: auto;
+}
+
+.form-controls .next-btn:hover {
+    background-color: #f07b85;
+}
+
+.form-controls .submit-btn {
+    background-color: #8cff8c; /* Xanh lá cây nhạt */
+    color: var(--text-color);
+    margin-left: auto;
+}
+
+.form-controls .submit-btn:hover {
+    background-color: #6bd66b;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .camp-form {
+        margin: 20px auto;
+        padding: 15px;
+        border-radius: 15px;
+    }
+    .form-controls {
+        flex-direction: column;
+    }
+    .form-controls button {
+        width: 100%;
+        margin-left: 0 !important;
+        margin-top: 10px;
+    }
+}

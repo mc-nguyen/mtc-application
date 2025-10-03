@@ -1,6 +1,6 @@
 // src/utils/firestoreUtils.js
 import { db } from '../config/firebaseConfig';
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDoc, doc } from "firebase/firestore";
 
 /**
  * Lưu tất cả dữ liệu form vào Firestore với ID tự động.
@@ -10,7 +10,7 @@ import { collection, addDoc } from "firebase/firestore";
 export const saveAllFormDataToFirestore = async (formData) => {
     try {
         const submissionsCollectionRef = collection(db, 'artifacts', 'mtc-applications', 'public', 'data', 'formSubmissions');
-        
+
         const docRef = await addDoc(submissionsCollectionRef, {
             ...formData,
             submissionDate: new Date().toISOString()
@@ -32,7 +32,7 @@ export const saveAllFormDataToFirestore = async (formData) => {
 export const saveCampDataToFirestore = async (formData) => {
     try {
         const campSubmissionsCollectionRef = collection(db, 'artifacts', 'mtc-applications', 'public', 'data', 'campSubmissions');
-        
+
         const docRef = await addDoc(campSubmissionsCollectionRef, {
             ...formData,
             type: 'BinhMinhCamp',
@@ -44,5 +44,16 @@ export const saveCampDataToFirestore = async (formData) => {
     } catch (e) {
         console.error("Error saving camp registration data:", e);
         return null;
+    }
+};
+
+export const checkAdminRole = async (email) => {
+    try {
+        const docRef = doc(db, 'artifacts', 'mtc-applications', 'public', 'data', 'email', email);
+        const docSnap = await getDoc(docRef);
+        return docSnap.exists() && docSnap.data().role === 'admin';
+    } catch (err) {
+        console.error('Lỗi khi kiểm tra role:', err);
+        return false;
     }
 };

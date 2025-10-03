@@ -1,6 +1,7 @@
 import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import { useLanguage } from '../LanguageContext';
 import SignaturePad from './SignaturePad';
+import './FormSection.css';
 
 const TNTTRules = forwardRef(({ formData, setFormData }, ref) => {
   const { t } = useLanguage();

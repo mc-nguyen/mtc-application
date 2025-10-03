@@ -1,0 +1,107 @@
+/* EventsPage.css - Dễ thương, Mềm mại, Responsive */
+
+:root {
+    --primary-color: #ff9aa2;
+    --secondary-color: #b5e4ff;
+    --text-color: #333;
+    --bg-color: #f7f3f3;
+}
+
+.events-page {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: var(--bg-color);
+    min-height: 100vh;
+}
+
+.events-page h1 {
+    color: var(--primary-color);
+    margin-bottom: 40px;
+    font-family: 'Pacifico', cursive;
+    font-size: 2.5em;
+    animation: bounceIn 1s ease-out;
+}
+
+.events-list {
+    margin: 30px 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px; /* Tăng khoảng cách */
+}
+
+.event-card {
+    border: none;
+    border-radius: 20px;
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    background-color: #ffffff;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s; /* Hiệu ứng spring */
+}
+
+.event-card:hover {
+    transform: scale(1.05); /* Hiệu ứng zoom nhẹ */
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+
+.event-card h3 {
+    color: var(--text-color);
+    margin-top: 0;
+    font-size: 1.8em;
+    border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 10px;
+}
+
+.event-card p {
+    color: #666;
+    margin: 15px 0 25px;
+}
+
+.event-card .register-btn {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.event-card .register-btn:hover {
+    background-color: #f07b85;
+    transform: translateY(-2px);
+}
+
+.back-btn {
+    margin-top: 50px;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-weight: 500;
+}
+
+.back-btn:hover {
+    background-color: #92c7e0;
+    transform: translateY(-2px);
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .events-page h1 {
+        font-size: 2em;
+    }
+}

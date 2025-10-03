@@ -2,6 +2,7 @@ import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'rea
 import SignaturePad from './SignaturePad';
 import { useLanguage } from '../LanguageContext';
 import { useNganh } from '../hooks/useNganh'; // Import hook mới
+import './FormSection.css';
 
 const MainInfo = forwardRef(({ formData, setFormData, isCamp = false }, ref) => {
   const { t } = useLanguage();
@@ -9,14 +10,14 @@ const MainInfo = forwardRef(({ formData, setFormData, isCamp = false }, ref) => 
 
   useEffect(() => {
     // Reset signatures if the participant type changes
-    setFormData(prev => ({ 
+    setFormData(prev => ({
       ...prev,
       mainInfo: {
         ...prev.mainInfo,
         nganh: prev.isAdult ? prev.mainInfo.nganh : '', // Clear nganh if not adult
       }
     }));
-  }, [formData.isAdult, setFormData]); 
+  }, [formData.isAdult, setFormData]);
 
   // Sử dụng custom hook để lấy tuổi và ngành
   const { nganh: participantNganh } = useNganh(formData.dob);
@@ -88,26 +89,26 @@ const MainInfo = forwardRef(({ formData, setFormData, isCamp = false }, ref) => 
   }));
 
   return (
-    <div className="form-section">
-      <h2>{t('main_info_title')}</h2>
+    <section className="form-section main-info">
+      <h2 className="form-section__title">{t('main_info_title')}</h2>
 
       {/* 1. Thông tin cá nhân */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
-        <div>
-          <label>{t('main_info_saint_name')}</label>
-          <input type="text" name="saintName" value={formData.mainInfo.saintName || ''} onChange={handleChange} required />
+      <div className="form-section__grid">
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_saint_name')}</label>
+          <input className="form-section__input" type="text" name="saintName" value={formData.mainInfo.saintName || ''} onChange={handleChange} required />
         </div>
-        <div>
-          <label>{t('main_info_last_name')}</label>
-          <input type="text" name="lastName" value={formData.mainInfo.lastName || ''} onChange={handleChange} required />
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_last_name')}</label>
+          <input className="form-section__input" type="text" name="lastName" value={formData.mainInfo.lastName || ''} onChange={handleChange} required />
         </div>
-        <div>
-          <label>{t('main_info_middle_name')}</label>
-          <input type="text" name="middleName" value={formData.mainInfo.middleName || ''} onChange={handleChange} required />
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_middle_name')}</label>
+          <input className="form-section__input" type="text" name="middleName" value={formData.mainInfo.middleName || ''} onChange={handleChange} required />
         </div>
-        <div>
-          <label>{t('main_info_given_name')}</label>
-          <input type="text" name="givenName" value={formData.mainInfo.givenName || ''} onChange={handleChange} required />
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_given_name')}</label>
+          <input className="form-section__input" type="text" name="givenName" value={formData.mainInfo.givenName || ''} onChange={handleChange} required />
         </div>
       </div>
 
@@ -116,80 +117,79 @@ const MainInfo = forwardRef(({ formData, setFormData, isCamp = false }, ref) => 
       {/* 2. Thông tin cha mẹ (chỉ hiện thị cho vị thành niên) */}
       {!formData.isAdult && (
         <>
-          <div>
-            <label>{t('main_info_father_name')}</label>
-            <input type="text" name="fatherName" value={formData.mainInfo.fatherName || ''} onChange={handleChange} required />
-            <label style={{ marginTop: '10px' }}>{t('main_info_mother_name')}</label>
-            <input type="text" name="motherName" value={formData.mainInfo.motherName || ''} onChange={handleChange} required />
+          <div className="form-section__field">
+            <label className="form-section__label">{t('main_info_father_name')}</label>
+            <input className="form-section__input" type="text" name="fatherName" value={formData.mainInfo.fatherName || ''} onChange={handleChange} required />
+            <label className="form-section__label">{t('main_info_mother_name')}</label>
+            <input className="form-section__input" type="text" name="motherName" value={formData.mainInfo.motherName || ''} onChange={handleChange} required />
           </div>
           <hr style={{ margin: '30px 0' }} />
         </>
       )}
 
       {/* 3. Địa chỉ và số điện thoại */}
-      <div>
-        <label>{t('main_info_street_address')}</label>
-        <input type="text" name="streetAddress" value={formData.mainInfo.streetAddress || ''} onChange={handleChange} required />
+      <div className="form-section__grid">
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_street_address')}</label>
+          <input className="form-section__input" type="text" name="streetAddress" value={formData.mainInfo.streetAddress || ''} onChange={handleChange} required />
+        </div>
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_city')}</label>
+          <input className="form-section__input" type="text" name="city" value={formData.mainInfo.city || ''} onChange={handleChange} required />
+        </div>
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_state')}</label>
+          <input className="form-section__input" type="text" name="state" value={formData.mainInfo.state || ''} onChange={handleChange} required />
+        </div>
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_zip')}</label>
+          <input className="form-section__input" type="text" name="zip" value={formData.mainInfo.zip || ''} onChange={handleChange} required />
+        </div>
       </div>
 
-      <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
-        <div>
-          <label>{t('main_info_city')}</label>
-          <input type="text" name="city" value={formData.mainInfo.city || ''} onChange={handleChange} required />
+      <div className="form-section__grid">
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_home_phone')}</label>
+          <input className="form-section__input" type="tel" name="homePhone" value={formData.mainInfo.homePhone || ''} onChange={handleChange} />
         </div>
-        <div>
-          <label>{t('main_info_state')}</label>
-          <input type="text" name="state" value={formData.mainInfo.state || ''} onChange={handleChange} required />
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_cell_phone')}</label>
+          <input className="form-section__input" type="tel" name="cellPhone" value={formData.mainInfo.cellPhone || ''} onChange={handleChange} required />
         </div>
-        <div>
-          <label>{t('main_info_zip')}</label>
-          <input type="text" name="zip" value={formData.mainInfo.zip || ''} onChange={handleChange} required />
-        </div>
-      </div>
-
-      <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
-        <div>
-          <label>{t('main_info_home_phone')}</label>
-          <input type="tel" name="homePhone" value={formData.mainInfo.homePhone || ''} onChange={handleChange} />
-        </div>
-        <div>
-          <label>{t('main_info_cell_phone')}</label>
-          <input type="tel" name="cellPhone" value={formData.mainInfo.cellPhone || ''} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>{t('main_info_work_phone')}</label>
-          <input type="tel" name="workPhone" value={formData.mainInfo.workPhone || ''} onChange={handleChange} />
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_work_phone')}</label>
+          <input className="form-section__input" type="tel" name="workPhone" value={formData.mainInfo.workPhone || ''} onChange={handleChange} />
         </div>
       </div>
 
       {/* 4. Thông tin liên hệ khẩn cấp và email */}
-      <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
-        <div>
-          <label>{t('main_info_emergency_contact_name')}</label>
-          <input type="text" name="emergencyContactName" value={formData.mainInfo.emergencyContactName || ''} onChange={handleChange} required />
+      <div className="form-section__grid">
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_emergency_contact_name')}</label>
+          <input className="form-section__input" type="text" name="emergencyContactName" value={formData.mainInfo.emergencyContactName || ''} onChange={handleChange} required />
         </div>
-        <div>
-          <label>{t('main_info_emergency_contact_phone')}</label>
-          <input type="tel" name="emergencyContactPhone" value={formData.mainInfo.emergencyContactPhone || ''} onChange={handleChange} required />
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_emergency_contact_phone')}</label>
+          <input className="form-section__input" type="tel" name="emergencyContactPhone" value={formData.mainInfo.emergencyContactPhone || ''} onChange={handleChange} required />
         </div>
       </div>
 
-      <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
-        <div>
-          <label>{t('main_info_dob')}</label>
-          <input type="date" name="dob" value={formData.dob} disabled />
+      <div className="form-section__grid">
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_dob')}</label>
+          <input className="form-section__input" type="date" name="dob" value={formData.dob} disabled />
         </div>
-        <div>
-          <label>{t('main_info_email')}</label>
-          <input type="email" name="email" value={formData.mainInfo.email || ''} onChange={handleChange} required />
+        <div className="form-section__field">
+          <label className="form-section__label">{t('main_info_email')}</label>
+          <input className="form-section__input" type="email" name="email" value={formData.mainInfo.email || ''} onChange={handleChange} required />
         </div>
       </div>
 
       {/* Thêm phần hiển thị Ngành ngay trước chữ ký */}
       {!isCamp && (<>
         <hr style={{ margin: '30px 0' }} />
-        <div style={{ marginBottom: '20px' }}>
-          <label>{t('nganh_label')}</label>
+        <div className="form-section__field">
+          <label className="form-section__label">{t('nganh_label')}</label>
           {formData.isAdult ? (
             <select
               name="nganh"
@@ -205,10 +205,12 @@ const MainInfo = forwardRef(({ formData, setFormData, isCamp = false }, ref) => 
               <option value="Huấn Luyện Viên">{t('nganh_adult_option4')}</option>
             </select>
           ) : (
-            <input type="text" value={participantNganh} disabled className="nganh-input" />
+            <input className="form-section__input" type="text" value={participantNganh} disabled />
           )}
         </div></>
       )}
+
+      <hr style={{ margin: '30px 0' }} />
 
       {/* 5. Chữ ký */}
       <SignaturePad
@@ -239,7 +241,7 @@ const MainInfo = forwardRef(({ formData, setFormData, isCamp = false }, ref) => 
           )}
         </>
       )}
-    </div>
+    </section>
   );
 });
 

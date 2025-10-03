@@ -1,50 +1,67 @@
-// src/admin/AdminAuthContext.js
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../config/firebaseConfig';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { auth, db } from '../config/firebaseConfig';
+import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 const AdminAuthContext = createContext();
-
-export const useAdminAuth = () => {
-  const context = useContext(AdminAuthContext);
-  if (!context) {
-    throw new Error('useAdminAuth must be used within an AdminAuthProvider');
-  }
-  return context;
-};
+export const useAdminAuth = () => useContext(AdminAuthContext);
 
 export const AdminAuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setIsAdmin(user && user.email === 'tnttmethienchuariverside@gmail.com');
-      setLoading(false);
-    });
-
-    return unsubscribe;
-  }, []);
-
-  const logout = async () => {
+  const checkAdminRole = async (email) => {
     try {
-      await signOut(auth);
-    } catch (error) {
-      console.error('Lỗi khi đăng xuất:', error);
+      const ref = doc(db, 'artifacts', 'mtc-applications', 'public', 'data', 'email', email);
+      const snap = await getDoc(ref);
+      return snap.exists() && snap.data().role === 'admin';
+    } catch (err) {
+      console.error('Role check failed:', err);
+      return false;
     }
   };
 
-  const value = {
-    currentUser,
-    isAdmin,
-    logout
+  const login = async (email, password) => {
+    setError(null);
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const isAdminUser = await checkAdminRole(result.user.email);
+      if (!isAdminUser) throw new Error('Không có quyền admin');
+      setUser(result.user);
+      setIsAdmin(true);
+    } catch (err) {
+      setError(err.message);
+      setUser(null);
+      setIsAdmin(false);
+    }
   };
 
+  const logout = async () => {
+    await signOut(auth);
+    setUser(null);
+    setIsAdmin(false);
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        const isAdminUser = await checkAdminRole(currentUser.email);
+        setUser(currentUser);
+        setIsAdmin(isAdminUser);
+      } else {
+        setUser(null);
+        setIsAdmin(false);
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
-    <AdminAuthContext.Provider value={value}>
-      {!loading && children}
+    <AdminAuthContext.Provider value={{ user, isAdmin, login, logout, loading, error }}>
+      {children}
     </AdminAuthContext.Provider>
   );
 };

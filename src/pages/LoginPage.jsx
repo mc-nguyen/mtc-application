@@ -1,125 +1,61 @@
-// src/pages/LoginPage.jsx
+// src/pages/LogIn.jsx
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../services/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebaseConfig';
 import { useLanguage } from '../LanguageContext';
+import './LoginPage.css'; // Đảm bảo import file CSS mới
 
-function LoginPage() {
-  const navigate = useNavigate();
-  const { login } = useAuth();
+const LogIn = () => {
   const { t } = useLanguage();
-  
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError(null);
 
     try {
-      const result = await login(email, password);
-      
-      if (result.success) {
-        navigate('/dashboard');
-      } else {
-        setError(result.error || 'Đăng nhập thất bại');
-      }
-    } catch (error) {
-      setError('Có lỗi xảy ra khi đăng nhập');
+      await signInWithEmailAndPassword(auth, email.trim(), password);
+      navigate('/dashboard');
+    } catch (err) {
+      console.error('Login failed:', err);
+      setError(t('login.invalidCredentials'));
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDemoLogin = (role) => {
-    if (role === 'admin') {
-      setEmail('tnttmethienchuariverside@gmail.com');
-      setPassword('demo123'); // Mật khẩu demo
-    } else {
-      setEmail('user@example.com');
-      setPassword('demo123');
-    }
-  };
-
   return (
-    <div className="registration-container">
-      <div className="form-section">
-        <h2>🔐 Đăng nhập tài khoản</h2>
-        
-        {error && (
-          <div className="error-message">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          <div className="input-container">
-            <label>📧 Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="Nhập email của bạn"
-            />
-          </div>
-
-          <div className="input-container">
-            <label>🔒 Mật khẩu:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Nhập mật khẩu"
-            />
-          </div>
-
-          <button type="submit" disabled={loading} className="primary-btn">
-            {loading ? '⏳ Đang đăng nhập...' : '🚀 Đăng nhập'}
-          </button>
-        </form>
-
-        {/* Demo buttons for testing */}
-        <div className="demo-section">
-          <h4>Demo Accounts:</h4>
-          <div className="button-group">
-            <button 
-              type="button" 
-              onClick={() => handleDemoLogin('admin')}
-              className="secondary-button"
-            >
-              👑 Login as Admin
-            </button>
-            <button 
-              type="button" 
-              onClick={() => handleDemoLogin('user')}
-              className="secondary-button"
-            >
-              👤 Login as User
-            </button>
-          </div>
-        </div>
-
-        <div className="auth-links">
-          <p>
-            Chưa có tài khoản? 
-            <Link to="/registration" className="auth-link">
-              Đăng ký thành viên ngay
-            </Link>
-          </p>
-          <p>
-            <Link to="/" className="auth-link">
-              ← Quay lại trang chủ
-            </Link>
-          </p>
-        </div>
-      </div>
+    <div className="login-page">
+      <h2>{t('login.title')}</h2>
+      <form onSubmit={handleLogin}>
+        <input
+          type="email"
+          placeholder={t('login.emailPlaceholder')}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder={t('login.passwordPlaceholder')}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? t('login.loading') : t('login.submit')}
+        </button>
+      </form>
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
-}
+};
 
-export default LoginPage;
+export default LogIn;

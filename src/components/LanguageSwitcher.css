@@ -1,47 +1,67 @@
-/* src/components/LanguageSwitcher.css */
+/* src/css/LanguageSwitcher.css - Cập nhật cho Header nền trắng và phong cách cute */
+
+:root {
+    /* Sử dụng các biến màu đã định nghĩa trong Header.css */
+    --primary-color: #f48fb1;     /* Màu Hồng Dịu Dàng */
+    --secondary-color: #80cbc4;   /* Màu Xanh Ngọc Dễ Thương */
+    --text-color: #333;           /* Màu chữ tối */
+}
+
 .language-switcher {
   display: flex;
   align-items: center;
-  margin-left: auto;
-  padding: 0 15px;
+  /* Bỏ margin-left: auto; vì nó đã được đặt trong Header.css (.header-right) */
+  padding: 0; /* Bỏ padding vì đã có trong Header.css */
 }
 
 .language-switcher button {
   background: none;
   border: none;
-  color: white;
+  /* Màu chữ mặc định là màu tối để nổi bật trên nền trắng */
+  color: var(--text-color); 
   cursor: pointer;
-  font-size: 14px;
+  font-size: 1em; /* Tăng kích thước font một chút */
   font-weight: 600;
   padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: 15px; /* Bo tròn mạnh hơn cho cảm giác cute */
   transition: all 0.3s ease;
+  font-family: 'Quicksand', sans-serif;
 }
 
+/* Hiệu ứng khi di chuột */
 .language-switcher button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--secondary-color); /* Màu nền khi hover */
+  color: white;
+  transform: translateY(-1px); /* Hiệu ứng nổi nhẹ */
 }
 
+/* Nút ngôn ngữ đang hoạt động */
 .language-switcher button.active {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--primary-color); /* Màu hồng chủ đạo */
+  color: white; /* Chữ trắng trên nền hồng */
+  box-shadow: 0 2px 5px rgba(244, 143, 177, 0.4); /* Thêm shadow nhẹ */
 }
 
 .language-divider {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--secondary-color); /* Màu xanh ngọc cho dấu phân cách */
   margin: 0 5px;
+  font-weight: 300;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
+    /* Bỏ các style 'position: absolute' và 'top/right'
+       để nó nằm gọn trong .header-right */
   .language-switcher {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    margin-left: 0;
+    padding: 0;
   }
   
   .language-switcher button {
-    font-size: 12px;
+    font-size: 0.8em;
     padding: 4px 8px;
+  }
+  
+  .language-divider {
+    margin: 0 3px;
   }
 }

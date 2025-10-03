@@ -5,15 +5,22 @@ const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState('vi'); // Ngôn ngữ mặc định
-  
+
   const t = (key) => {
-    return translations[language][key] || key; // Hàm dịch thuật
+    const keys = key.split('.');
+    let value = translations[language];
+    for (let k of keys) {
+      value = value?.[k];
+      if (value === undefined) break;
+    }
+    return value || key; // fallback là chính key
   };
-  
+
+
   const changeLanguage = (lng) => {
     setLanguage(lng);
   };
-  
+
   return (
     <LanguageContext.Provider value={{ t, changeLanguage, language }}>
       {children}

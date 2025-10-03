@@ -1,0 +1,165 @@
+/* ThankYouPage.css - Dễ thương, Mềm mại, Responsive */
+
+:root {
+    --primary-color: #ff9aa2;
+    --success-bg: #e6ffe6; /* Xanh lá nhạt cho thành công */
+    --camp-bg: #fff0d9; /* Vàng kem cho trại */
+    --text-color: #333;
+    --accent-color: #b5e4ff;
+}
+
+.thank-you-container {
+    max-width: 90%;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    text-align: center;
+    animation: fadeIn 1s ease-out;
+}
+
+.thank-you-container h1 {
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    font-family: 'Pacifico', cursive;
+    font-size: 2.5em;
+}
+
+.thank-you-message {
+    margin: 20px 0;
+    padding: 25px;
+    border-radius: 15px;
+    font-size: 1.1em;
+    font-weight: 500;
+    line-height: 1.5;
+    animation: popIn 0.6s ease-out;
+}
+
+.membership-message {
+    background-color: var(--success-bg);
+    color: #1a7a1a;
+    border: 1px solid #c3e6cb;
+}
+
+.camp-message {
+    background-color: var(--camp-bg);
+    color: #a06e00;
+    border: 1px solid #ffd89c;
+}
+
+.personal-info-summary, .camp-info, .receipt {
+    text-align: left;
+    margin: 30px auto;
+    padding: 25px;
+    border: none;
+    border-radius: 15px;
+    max-width: 700px;
+    background-color: #f7f3f3;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.receipt h3 {
+    border-bottom: 2px dashed var(--primary-color);
+    padding-bottom: 10px;
+}
+
+.receipt table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden; /* Quan trọng để bo góc table */
+}
+
+.receipt th, .receipt td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    padding: 12px;
+    text-align: left;
+}
+
+.receipt thead th {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.total-row td {
+    font-size: 1.2em;
+    font-weight: bold;
+    background-color: var(--primary-color);
+    color: white;
+    border-top: 2px solid white;
+}
+
+.payment-instructions p {
+    margin-top: 20px;
+    font-style: italic;
+    color: #6c757d;
+}
+
+.action-buttons {
+    margin-top: 40px;
+}
+
+.action-buttons button {
+    padding: 12px 25px;
+    font-size: 16px;
+    margin: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease, transform 0.2s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.action-buttons button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.action-buttons .home-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.action-buttons .home-btn:hover {
+    background-color: #f07b85;
+}
+
+.action-buttons .print-btn {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.action-buttons .print-btn:hover {
+    background-color: #e5954a;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .thank-you-container {
+        padding: 20px;
+        margin: 20px auto;
+    }
+    .receipt table, .personal-info-summary, .camp-info {
+        padding: 15px;
+    }
+    .action-buttons button {
+        width: 100%;
+        margin: 5px 0;
+    }
+}

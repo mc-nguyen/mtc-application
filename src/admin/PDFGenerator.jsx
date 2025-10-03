@@ -1,5 +1,5 @@
 // src/admin/PDFGenerator.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Document, Page, Text, View, StyleSheet, pdf, Image, Font } from '@react-pdf/renderer';
 
 // Import hình ảnh từ thư mục assets
@@ -218,7 +218,7 @@ const Page1MainInfo = ({ member, isCamp }) => (
             <Text style={styles.subsectionTitle}>THÔNG TIN CÁ NHÂN</Text>
             <View style={styles.row}>
                 <Text style={styles.label}>Tên Thánh & Họ Tên: </Text>
-                <Text style={styles.value}>{`${member.mainInfo.saintName || ''} ${member.mainInfo.lastName || ''} ${member.mainInfo.middleName || ''} ${member.mainInfo.givenName || ''}`}</Text>
+                <Text style={styles.value}>${member.mainInfo?.saintName + " - " || ''} {member.mainInfo?.lastName || ''} {member.mainInfo?.middleName || ''} {member.mainInfo?.givenName || ''}</Text>
             </View>
             {!member.isAdult && (
                 <>
@@ -250,12 +250,12 @@ const Page1MainInfo = ({ member, isCamp }) => (
             </View>
             <View style={styles.row}>
                 <Text style={styles.label}>Địa chỉ: </Text>
-                <Text style={styles.value}>{`${member.mainInfo.streetAddress || ''}, ${member.mainInfo.city || ''}, ${member.mainInfo.state || ''} ${member.mainInfo.zip || ''}`}</Text>
+                <Text style={styles.value}>{`${member.mainInfo?.streetAddress || ''}, ${member.mainInfo?.city || ''}, ${member.mainInfo?.state || ''} ${member.mainInfo?.zip || ''}`}</Text>
             </View>
             {member.mainInfo?.nganh && (
                 <View style={styles.row}>
                     <Text style={styles.label}>Ngành:</Text>
-                    <Text style={styles.value}>{member.mainInfo.nganh}</Text>
+                    <Text style={styles.value}>{member.mainInfo?.nganh}</Text>
                 </View>
             )}
         </View>
@@ -266,9 +266,9 @@ const Page1MainInfo = ({ member, isCamp }) => (
             <View style={styles.section}>
                 {/* Participant signature */}
                 <Text style={styles.waiverAgreement}>Em xin được ghi danh gia nhập phong trào TNTT tại <Text style={{ backgroundColor: "yellow" }}>Đoàn TNTT Mẹ Thiên Chúa, Riverside</Text>. Em hứa sẽ vâng lời và theo sự hướng dẫn của cha Tuyên Úy Đoàn, Đoàn Trưởng, các trợ tá, các phụ huynh cũng như các anh chị huynh trưởng có trách nhiệm trong đoàn và trong ngành mà em sinh hoạt hằng tuần. Em sẽ cố gắng sống 4 khẩu hiệu của Thiếu Nhi: Cầu Nguyện, Rước Lễ, Hy Sinh và Làm Việc Tông Ðồ cũng như thực hành các tôn chỉ của phong trào TNTT. Em sẽ chu toàn bổn phận của một đoàn sinh trong đoàn TNTT và thực thi đúng các nội quy của đoàn TNTT.</Text>
-                {member.mainInfo.participantSignature ? (
+                {member.mainInfo?.participantSignature ? (
                     <Image
-                        src={member.mainInfo.participantSignature}
+                        src={member.mainInfo?.participantSignature}
                         style={{ width: 150, height: 60, marginBottom: 4 }}
                     />
                 ) : (
@@ -276,7 +276,7 @@ const Page1MainInfo = ({ member, isCamp }) => (
                 )}
                 <View style={styles.row}>
                     <Text style={styles.label}>Người ký:</Text>
-                    <Text style={styles.value}>{member.mainInfo.participantSignatureName || ''}</Text>
+                    <Text style={styles.value}>{member.mainInfo?.participantSignatureName || ''}</Text>
                 </View>
                 <View style={styles.row}>
                     <Text style={styles.label}>Ngày ký:</Text>
@@ -288,9 +288,9 @@ const Page1MainInfo = ({ member, isCamp }) => (
             {calculateAge(member.dob) < 18 && (
                 <View style={styles.section}>
                     <Text style={styles.waiverAgreement}>Tôi cho phép con tôi sinh hoạt <Text style={{ backgroundColor: "yellow" }}>Đoàn TNTT-Mẹ Thiên Chúa, Riverside</Text>. Tôi sẽ hoàn toàn chịu trách nhiệm nếu có những trường hợp không may xảy ra với con tôi trong các giờ sinh hoạt của đoàn.</Text>
-                    {member.mainInfo.parentSignature ? (
+                    {member.mainInfo?.parentSignature ? (
                         <Image
-                            src={member.mainInfo.parentSignature}
+                            src={member.mainInfo?.parentSignature}
                             style={{ width: 150, height: 60, marginBottom: 4 }}
                         />
                     ) : (
@@ -298,7 +298,7 @@ const Page1MainInfo = ({ member, isCamp }) => (
                     )}
                     <View style={styles.row}>
                         <Text style={styles.label}>Người ký:</Text>
-                        <Text style={styles.value}>{member.mainInfo.parentSignatureName || ''}</Text>
+                        <Text style={styles.value}>{member.mainInfo?.parentSignatureName || ''}</Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Ngày ký:</Text>
@@ -318,20 +318,20 @@ const Page1MainInfo = ({ member, isCamp }) => (
                 <View style={styles.row}>
                     <Text style={styles.label}>Áo uniform:</Text>
                     <Text style={styles.value}>
-                        {member.paymentInfo.uniformShirt ? 'Có ($25.00)' : 'Không'}
+                        {member.paymentInfo?.uniformShirt ? 'Có ($25.00)' : 'Không'}
                     </Text>
                 </View>
                 <View style={styles.row}>
                     <Text style={styles.label}>Skort uniform:</Text>
                     <Text style={styles.value}>
-                        {member.paymentInfo.uniformSkort ? 'Có ($25.00)' : 'Không'}
+                        {member.paymentInfo?.uniformSkort ? 'Có ($25.00)' : 'Không'}
                     </Text>
                 </View>
                 {!member.isAdult && (
                     <View style={styles.row}>
                         <Text style={styles.label}>Khăn:</Text>
                         <Text style={styles.value}>
-                            {member.paymentInfo.scarf ? 'Có ($10.00)' : 'Không'}
+                            {member.paymentInfo?.scarf ? 'Có ($10.00)' : 'Không'}
                         </Text>
                     </View>
                 )}
@@ -350,15 +350,15 @@ const Page2HealthInfo = ({ member }) => (
             <Text style={styles.subsectionTitle}>PERSONAL INFORMATION</Text>
             <View style={styles.row}>
                 <Text style={styles.label}>LAST NAME: </Text>
-                <Text style={styles.value}>{member.mainInfo.lastName || ''}</Text>
+                <Text style={styles.value}>{member.mainInfo?.lastName || ''}</Text>
             </View>
             <View style={styles.row}>
                 <Text style={styles.label}>FIRST NAME: </Text>
-                <Text style={styles.value}>{member.mainInfo.givenName || ''}</Text>
+                <Text style={styles.value}>{member.mainInfo?.givenName || ''}</Text>
             </View>
             <View style={styles.row}>
                 <Text style={styles.label}>ADDRESS: </Text>
-                <Text style={styles.value}>{`${member.mainInfo.streetAddress || ''}, ${member.mainInfo.city || ''}, ${member.mainInfo.state || ''} ${member.mainInfo.zip || ''}`}</Text>
+                <Text style={styles.value}>{`${member.mainInfo?.streetAddress || ''}, ${member.mainInfo?.city || ''}, ${member.mainInfo?.state || ''} ${member.mainInfo?.zip || ''}`}</Text>
             </View>
             <View style={styles.row}>
                 <Text style={styles.label}>PHONE NUMBER:</Text>
@@ -374,7 +374,7 @@ const Page2HealthInfo = ({ member }) => (
             </View>
             <View style={styles.row}>
                 <Text style={styles.label}>GENDER:</Text>
-                <Text style={styles.value}>{member.healthInfo.gender.toUpperCase()}</Text>
+                <Text style={styles.value}>{member.healthInfo?.gender.toUpperCase()}</Text>
             </View>
             <View style={styles.row}>
                 <Text style={styles.label}>PARISH:</Text>
@@ -517,12 +517,12 @@ const Page4Waiver = ({ member }) => (
             </Text>
         </View>
         <Image
-            src={member.waiverRelease.signature}
+            src={member.waiverRelease?.signature}
             style={{ width: 150, height: 60, marginBottom: 4 }}
         />
         <View style={styles.row}>
             <Text style={styles.label}>Người ký:</Text>
-            <Text style={styles.value}>{member.waiverRelease.signatureName || ''}</Text>
+            <Text style={styles.value}>{member.waiverRelease?.signatureName || ''}</Text>
         </View>
         <View style={styles.row}>
             <Text style={styles.label}>Ngày ký:</Text>
@@ -599,60 +599,95 @@ const calculateTotal = (paymentInfo, isAdult) => {
 };
 
 // Main PDF Generator Component
-const PDFGenerator = ({ data, type = 'member' }) => {
-    const [isGenerating, setIsGenerating] = useState(false);
+const PDFGenerator = ({ formData, isCamp = false }) => { // <--- THAY ĐỔI Ở ĐÂY: NHẬN formData và isCamp
     const [pdfUrl, setPdfUrl] = useState(null);
+    const [pdfBlob, setPdfBlob] = useState(null);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [error, setError] = useState(null);
 
-    const generatePDF = async () => {
-        setIsGenerating(true);
-        try {
-            const blob = await pdf((
-                <MemberPDFDocument
-                    member={data}
-                    isCamp={type === 'camp'}
-                />
-            )).toBlob();
-
-            const url = URL.createObjectURL(blob);
-            setPdfUrl(url);
-        } catch (error) {
-            console.error('Lỗi khi tạo PDF:', error);
-            alert('Có lỗi xảy ra khi tạo PDF!');
-        } finally {
-            setIsGenerating(false);
-        }
+    const closePreview = () => {
+        setPdfUrl(null);
+        // Không gọi onClose ở đây, để UserDashboard quản lý việc đóng popup tổng
     };
 
     const downloadPDF = () => {
         if (pdfUrl) {
             const link = document.createElement('a');
             link.href = pdfUrl;
-            link.download = `${type === 'camp' ? 'camp-registration' : 'member-registration'}-${data.id}.pdf`;
+
+            // Lấy tên người tham gia để đặt tên file
+            const name = [
+                formData.mainInfo?.lastName,
+                formData.mainInfo?.givenName,
+            ].filter(Boolean).join('_');
+
+            link.setAttribute('download', `${name || 'Form_Dang_Ky'}_${new Date().getFullYear()}.pdf`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
     };
 
-    const closePreview = () => {
+    const generatePDF = async () => {
+        if (!formData || isGenerating) return;
+
+        // Xóa URL cũ và reset trạng thái lỗi
+        if (pdfUrl) URL.revokeObjectURL(pdfUrl);
         setPdfUrl(null);
-        if (pdfUrl) {
-            URL.revokeObjectURL(pdfUrl);
+        setError(null);
+        setIsGenerating(true);
+
+        try {
+            console.log("Bắt đầu tạo PDF...");
+            // Thêm totalAmount vào formData để MyDocument có thể sử dụng (từ UserDashboard.jsx)
+            const documentWithData = <MemberPDFDocument member={formData} isCamp={isCamp} />;
+
+            const blob = await pdf(documentWithData).toBlob();
+            const url = URL.createObjectURL(blob);
+
+            console.log("PDF được tạo thành công.");
+            setPdfUrl(url);
+            setPdfBlob(blob);
+        } catch (err) {
+            console.error("Lỗi khi tạo PDF:", err);
+            setError("Đã xảy ra lỗi trong quá trình tạo PDF. Kiểm tra console để biết thêm chi tiết.");
+        } finally {
+            setIsGenerating(false);
         }
     };
 
+    // LOGIC TỰ ĐỘNG TẠO PDF
+    useEffect(() => {
+        if (formData) {
+            generatePDF();
+        }
+
+        // Cleanup: Hủy bỏ Object URL khi component unmount hoặc formData thay đổi
+        return () => {
+            if (pdfUrl) {
+                URL.revokeObjectURL(pdfUrl);
+            }
+        };
+    }, [formData]); // Chạy lại khi formData thay đổi
+
     return (
-        <div className="pdf-generator">
+        <div className="pdf-generator-container">
             <button
                 onClick={generatePDF}
                 disabled={isGenerating}
-                className="pdf-btn"
+                className="action-btn-secondary pdf-btn" // Sử dụng class chung action-btn-secondary
             >
                 {isGenerating ? 'Đang tạo PDF...' : 'Xem PDF'}
             </button>
 
-            {pdfUrl && (
+            {error && !isGenerating && (
+                <p className="error-message">{error}</p>
+            )}
+
+            {/* Giữ nguyên phần Modal và Preview */}
+            {pdfUrl && !isGenerating && (
                 <div className="pdf-preview-overlay">
+                    {/* ... (Nội dung modal) ... */}
                     <div className="pdf-preview-modal">
                         <div className="pdf-preview-header">
                             <h3>Xem trước PDF</h3>
@@ -665,14 +700,14 @@ const PDFGenerator = ({ data, type = 'member' }) => {
                             <iframe
                                 src={pdfUrl}
                                 title="PDF Preview"
-                                width="100%"
-                                height="500"
+                                width="100%" // Giữ nguyên 100%
+                                height="100%" // THAY ĐỔI: Đảm bảo iframe chiếm toàn bộ không gian dọc
                                 style={{ border: 'none' }}
                             />
                         </div>
 
                         <div className="pdf-preview-actions">
-                            <button onClick={downloadPDF} className="download-btn">
+                            <button onClick={downloadPDF} className="action-btn-secondary download-btn">
                                 📥 Tải xuống PDF
                             </button>
                             <button onClick={closePreview} className="cancel-btn">

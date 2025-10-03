@@ -1,205 +1,140 @@
-// src/components/SaveFormPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../services/AuthContext';
+import { auth, db } from '../config/firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+  collection,
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+} from 'firebase/firestore';
 import { useLanguage } from '../LanguageContext';
-import { AuthService } from '../services/authService';
+import './SaveFormPage.css'; // Đảm bảo import file CSS mới
 
-function SaveFormPage() {
+const SaveFormPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { currentUser, register, login, saveForm } = useAuth();
-  
-  const { formData, isCamp = false } = location.state || {};
-  const [email, setEmail] = useState('');
+
+  const [status, setStatus] = useState('idle'); // idle | awaitingPassword | saving | success | error
+  const [error, setError] = useState(null);
   const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [action, setAction] = useState(''); // 'login', 'register', 'skip'
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+
+  const formData = location.state?.formData;
+  const email = formData?.mainInfo?.email;
 
   useEffect(() => {
-    if (!formData) {
-      navigate('/');
+    const checkAndHandleEmail = async () => {
+      if (!formData || !email) {
+        setError(t('error.noFormData'));
+        setStatus('error');
+        return;
+      }
+
+      try {
+        const userRef = doc(db, 'artifacts', 'mtc-applications', 'public', 'data', 'email', email);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+          await saveFormToExistingUser(userRef);
+        } else {
+          setStatus('awaitingPassword');
+        }
+      } catch (err) {
+        console.error('Email check failed:', err);
+        setError(t('error.saveForm'));
+        setStatus('error');
+      }
+    };
+
+    checkAndHandleEmail();
+  }, [formData, email, t]);
+
+  const saveFormToExistingUser = async (userRef) => {
+    try {
+      setStatus('saving');
+      const formRef = doc(collection(db, 'artifacts', 'mtc-applications', 'public', 'data', 'forms'));
+      await setDoc(formRef, { ...formData, submissionDate: new Date().toISOString() }); // Thêm submissionDate
+      const formId = formRef.id;
+
+      await updateDoc(userRef, {
+        forms: arrayUnion(formId),
+      });
+
+      setStatus('success');
+    } catch (err) {
+      console.error('Save to existing user failed:', err);
+      setError(t('error.saveForm'));
+      setStatus('error');
+    }
+  };
+
+  const handleCreateAccountAndSave = async () => {
+    if (!password || password.length < 6) {
+      setError(t('saveForm.missingPassword'));
       return;
     }
 
-    // Auto-fill email từ form data nếu có
-    if (formData.mainInfo?.email) {
-      setEmail(formData.mainInfo.email);
-      checkExistingAccount(formData.mainInfo.email);
-    }
-  }, [formData, navigate]);
-
-  const checkExistingAccount = async (email) => {
     try {
-      const exists = await AuthService.checkEmailExists(email);
-      if (exists) {
-        setAction('login');
-      }
-    } catch (error) {
-      console.error('Error checking email:', error);
+      setStatus('saving');
+      await createUserWithEmailAndPassword(auth, email, password);
+
+      const formRef = doc(collection(db, 'artifacts', 'mtc-applications', 'public', 'data', 'forms'));
+      await setDoc(formRef, { ...formData, submissionDate: new Date().toISOString() }); // Thêm submissionDate
+      const formId = formRef.id;
+
+      const userRef = doc(db, 'artifacts', 'mtc-applications', 'public', 'data', 'email', email);
+      await setDoc(userRef, {
+        role: 'user',
+        forms: [formId],
+      });
+
+      setStatus('success');
+    } catch (err) {
+      console.error('Create account failed:', err);
+      setError(t('error.saveForm'));
+      setStatus('error');
     }
   };
 
-  const handleSaveForm = async () => {
-    if (!formData) return;
-
-    setLoading(true);
-    setError('');
-
-    try {
-      let result;
-
-      if (action === 'register') {
-        result = await register(email, password, {
-          fullName,
-          initialFormData: formData
-        });
-      } else if (action === 'login') {
-        result = await login(email, password);
-      }
-
-      if (result && result.success) {
-        // Lưu form vào tài khoản
-        const saveResult = await saveForm(formData, isCamp ? 'camp' : 'membership');
-        
-        if (saveResult.success) {
-          navigate('/thank-you', { 
-            state: { formData, isCamp, savedToAccount: true } 
-          });
-        } else {
-          setError('Lỗi khi lưu form: ' + saveResult.error);
-        }
-      } else {
-        setError(result?.error || 'Có lỗi xảy ra');
-      }
-    } catch (error) {
-      setError('Có lỗi xảy ra: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSkip = () => {
-    navigate('/thank-you', { 
-      state: { formData, isCamp, savedToAccount: false } 
-    });
-  };
-
-  if (!formData) {
-    return <div>Loading...</div>;
-  }
+  const handleGoHome = () => navigate('/');
+  const handleViewDashboard = () => navigate('/dashboard');
 
   return (
     <div className="save-form-page">
-      <div className="save-form-container">
-        <h1>{t('save_form_title')}</h1>
-        <p>{t('save_form_description')}</p>
+      <h2>{t('saveForm.title')}</h2>
 
-        {/* Thông tin form preview */}
-        <div className="form-preview">
-          <h3>Thông tin đăng ký</h3>
-          <p><strong>Họ tên:</strong> {`${formData.mainInfo?.givenName} ${formData.mainInfo?.lastName}`}</p>
-          <p><strong>Email:</strong> {formData.mainInfo?.email}</p>
-          <p><strong>Loại:</strong> {isCamp ? 'Đăng ký Trại' : 'Đăng ký Thành viên'}</p>
-        </div>
+      {status === 'awaitingPassword' && (
+        <>
+          <p>{t('saveForm.enterPasswordPrompt')}</p>
+          <input
+            type="password"
+            placeholder={t('saveForm.passwordPlaceholder')}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button onClick={handleCreateAccountAndSave} className="primary-btn">{t('saveForm.createAccount')}</button>
+        </>
+      )}
 
-        {/* Form lựa chọn */}
-        <div className="save-options">
-          {!action ? (
-            <>
-              <button 
-                onClick={() => setAction('register')}
-                className="option-btn primary"
-              >
-                📝 Tạo tài khoản mới & Lưu form
-              </button>
-              
-              <button 
-                onClick={() => setAction('login')}
-                className="option-btn secondary"
-              >
-                🔐 Đã có tài khoản? Đăng nhập
-              </button>
-              
-              <button 
-                onClick={handleSkip}
-                className="option-btn skip"
-              >
-                ⏭️ Bỏ qua, không lưu tài khoản
-              </button>
-            </>
-          ) : (
-            <div className="auth-form">
-              {action === 'register' && (
-                <div className="form-group">
-                  <label>Họ và tên đầy đủ:</label>
-                  <input
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Nhập họ tên đầy đủ"
-                  />
-                </div>
-              )}
-              
-              <div className="form-group">
-                <label>Email:</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={action === 'login'} // Không cho sửa email khi login
-                />
-              </div>
-              
-              <div className="form-group">
-                <label>Mật khẩu:</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder={action === 'register' ? 'Tạo mật khẩu mới' : 'Nhập mật khẩu'}
-                />
-              </div>
-
-              {error && <div className="error-message">{error}</div>}
-
-              <div className="auth-actions">
-                <button 
-                  onClick={handleSaveForm}
-                  disabled={loading || !email || !password || (action === 'register' && !fullName)}
-                  className="save-btn"
-                >
-                  {loading ? 'Đang xử lý...' : 'Lưu form & Tiếp tục'}
-                </button>
-                
-                <button 
-                  onClick={() => setAction('')}
-                  className="back-btn"
-                >
-                  ← Quay lại lựa chọn
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Thông báo lợi ích */}
-        <div className="benefits">
-          <h4>Lợi ích khi lưu tài khoản:</h4>
-          <ul>
-            <li>✓ Theo dõi trạng thái đơn đăng ký</li>
-            <li>✓ Đăng ký nhanh cho các sự kiện tiếp theo</li>
-            <li>✓ Xem lại lịch sử đăng ký</li>
-            <li>✓ Nhận thông báo từ ban tổ chức</li>
-          </ul>
-        </div>
-      </div>
+      {status === 'saving' && <p>{t('saveForm.saving')}</p>}
+      {status === 'success' && (
+        <>
+          <p>{t('saveForm.success')}</p>
+          <button onClick={handleViewDashboard} className="primary-btn">{t('saveForm.viewDashboard')}</button>
+          <button onClick={handleGoHome} className="secondary-btn">{t('saveForm.goHome')}</button>
+        </>
+      )}
+      {status === 'error' && (
+        <>
+          <p className="error-message">{error}</p>
+          <button onClick={handleGoHome} className="primary-btn">{t('saveForm.goHome')}</button>
+        </>
+      )}
     </div>
   );
-}
+};
 
 export default SaveFormPage;

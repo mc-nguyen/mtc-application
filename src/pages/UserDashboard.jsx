@@ -1,219 +1,202 @@
-// src/pages/UserDashboard.jsx
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../services/AuthContext';
-import { useLanguage } from '../LanguageContext';
-import { doc, deleteDoc, collection } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
+import { doc, getDoc } from 'firebase/firestore';
+import { useLanguage } from '../LanguageContext';
+import PDFGenerator from '../admin/PDFGenerator';
+// BỔ SUNG CSS
+import './UserDashboard.css';
 
-function UserDashboard() {
-  const navigate = useNavigate();
-  const { currentUser, isAdmin, logout, getUserForms, getAllForms } = useAuth();
+const UserDashboard = () => {
+  const { user, loadingUser, logout } = useAuth();
   const { t } = useLanguage();
-  
   const [forms, setForms] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [deletingId, setDeletingId] = useState(null);
+  const [selectedForm, setSelectedForm] = useState(null);
+  const [loadingForms, setLoadingForms] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (currentUser) {
-      loadForms();
-    } else {
-      setLoading(false);
-    }
-  }, [currentUser]);
-
-  const loadForms = async () => {
-    try {
-      let userForms;
-      if (isAdmin) {
-        userForms = await getAllForms();
-      } else {
-        userForms = await getUserForms();
+    // ... (logic fetchForms giữ nguyên) ...
+    const fetchForms = async () => {
+      if (loadingUser) return;
+      if (!user?.email) {
+        setLoadingForms(false);
+        return;
       }
-      setForms(userForms);
-    } catch (error) {
-      console.error('Error loading forms:', error);
-    } finally {
-      setLoading(false);
+
+      try {
+        const emailRef = doc(db, 'artifacts', 'mtc-applications', 'public', 'data', 'email', user.email);
+        const emailSnap = await getDoc(emailRef);
+
+        if (!emailSnap.exists()) {
+          setForms([]);
+          setLoadingForms(false);
+          return;
+        }
+
+        const formIds = emailSnap.data().forms || [];
+        const formDataList = [];
+
+        for (const id of formIds) {
+          const formRef = doc(db, 'artifacts', 'mtc-applications', 'public', 'data', 'formSubmissions', id);
+          const formSnap = await getDoc(formRef);
+          if (formSnap.exists()) {
+            formDataList.push({ id: formSnap.id, ...formSnap.data() });
+          }
+        }
+        setForms(formDataList);
+
+      } catch (err) {
+        console.error('Lỗi khi lấy form:', err);
+        setError(t('error.fetchForms'));
+      } finally {
+        setLoadingForms(false);
+      }
+    };
+
+    fetchForms();
+  }, [user, loadingUser, t]);
+
+  const handleView = (form) => setSelectedForm(form);
+  const handleClose = () => setSelectedForm(null);
+
+  // --- HÀM RENDER CHI TIẾT FORM ---
+  const getFormType = (form) => {
+    // Giả định: Đơn đăng ký thành viên có paymentInfo.annualFee
+    if (form.paymentInfo?.annualFee) {
+      return t('form_type_registration');
     }
-  };
-
-  const handleDelete = async (formId, formType) => {
-    if (!window.confirm('Bạn có chắc chắn muốn xóa đơn đăng ký này?')) {
-      return;
+    // Giả định: Đơn đăng ký trại có isCamp trong waiverRelease
+    if (form.waiverRelease?.isCamp) {
+      return t('form_type_camp');
     }
-
-    setDeletingId(formId);
-    try {
-      const collectionPath = formType === 'membership' 
-        ? collection(db, 'artifacts', 'mtc-applications', 'public', 'data', 'formSubmissions')
-        : collection(db, 'artifacts', 'mtc-applications', 'public', 'data', 'campSubmissions');
-
-      await deleteDoc(doc(collectionPath, formId));
-      setForms(forms.filter(form => form.id !== formId));
-      alert('✅ Xóa đơn đăng ký thành công!');
-    } catch (error) {
-      console.error('Error deleting form:', error);
-      alert('❌ Có lỗi xảy ra khi xóa đơn đăng ký!');
-    } finally {
-      setDeletingId(null);
-    }
-  };
-
-  const handleViewDetails = (form) => {
-    // Có thể phát triển trang chi tiết sau
-    alert(`Xem chi tiết đơn ${form.id}`);
-  };
-
-  const handlePrintForm = (form) => {
-    // Có thể tích hợp PDFGenerator sau
-    alert(`In đơn ${form.id}`);
-  };
-
-  if (!currentUser) {
-    return (
-      <div className="thank-you-container">
-        <h2>🔒 Vui lòng đăng nhập</h2>
-        <p>Bạn cần đăng nhập để xem dashboard.</p>
-        <button onClick={() => navigate('/login')} className="primary-btn">
-          Đăng nhập ngay
-        </button>
-      </div>
-    );
+    return t('form_type_unknown');
   }
 
-  if (loading) {
-    return (
-      <div className="thank-you-container">
-        <h2>⏳ Đang tải dữ liệu...</h2>
-      </div>
-    );
-  }
+  const renderFormDetails = (form) => {
+    const fullName = [form.mainInfo?.saintName, form.mainInfo?.lastName, form.mainInfo?.middleName, form.mainInfo?.givenName].filter(Boolean).join(' ');
+    const formType = getFormType(form);
+    // Định dạng ngày sinh (cần đảm bảo form.dob là chuỗi ngày hợp lệ)
+    const dob = form.dob ? new Date(form.dob).toLocaleDateString('vi-VN') : 'N/A';
+    const isCampRegistration = form.waiverRelease?.isCamp;
 
-  return (
-    <div className="registration-container">
-      <div className="form-section">
-        {/* Header */}
-        <div className="dashboard-header">
-          <div>
-            <h2>📊 Dashboard của {currentUser.email}</h2>
-            <p>Quản lý đơn đăng ký của bạn</p>
-            {isAdmin && <span className="admin-badge">👑 Quản trị viên</span>}
-          </div>
-          <div className="header-actions">
-            <button onClick={logout} className="secondary-button">
-              🚪 Đăng xuất
-            </button>
-          </div>
+    return (
+      <div className="form-detail-content">
+        <div className="detail-section">
+          <h4>Thông tin chung</h4>
+          <p><strong>Loại đơn:</strong> {formType}</p>
+          <p><strong>Họ & Tên:</strong> {fullName}</p>
+          <p><strong>Ngày sinh:</strong> {dob}</p>
+          <p><strong>Email:</strong> {form.mainInfo?.email}</p>
+          <p><strong>Ngày nộp:</strong> {form.submissionDate || 'N/A'}</p>
         </div>
 
-        {/* Forms List */}
-        <div className="forms-section">
-          <div className="section-header">
-            <h3>📋 Đơn đăng ký ({forms.length})</h3>
-            <button onClick={loadForms} className="secondary-button">
-              🔄 Làm mới
-            </button>
-          </div>
+        <div className="detail-section">
+          <h4>Trạng thái & Thanh toán</h4>
+          <p className={`status-label ${form.paid ? 'paid' : 'unpaid'}`}>
+            <strong>Trạng thái thanh toán:</strong> {form.paid ? t('form.paid') : t('form.unpaid')}
+          </p>
 
-          {forms.length === 0 ? (
-            <div className="empty-state">
-              <p>📝 Chưa có đơn đăng ký nào.</p>
-              <div className="button-group">
-                <button 
-                  onClick={() => navigate('/registration')}
-                  className="primary-btn"
-                >
-                  🎯 Đăng ký thành viên
-                </button>
-                <button 
-                  onClick={() => navigate('/binh-minh')}
-                  className="secondary-button"
-                >
-                  🏕️ Đăng ký trại Bình Minh
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="forms-grid">
-              {forms.map((form, index) => (
-                <div key={form.id} className="form-card">
-                  <div className="form-card-header">
-                    <h4>📄 Đơn #{index + 1}</h4>
-                    <span className={`form-type-badge ${form.type}`}>
-                      {form.type === 'membership' ? '🎯 Thành viên' : '🏕️ Trại'}
-                    </span>
-                  </div>
-                  
-                  <div className="form-info">
-                    <p><strong>👤:</strong> {form.mainInfo?.givenName} {form.mainInfo?.lastName}</p>
-                    <p><strong>📅 Ngày đăng ký:</strong> {new Date(form.submissionDate).toLocaleDateString('vi-VN')}</p>
-                    <p><strong>💰 Trạng thái:</strong> 
-                      <span className={form.paid ? 'status-paid' : 'status-unpaid'}>
-                        {form.paid ? ' ✅ Đã thanh toán' : ' ❌ Chưa thanh toán'}
-                      </span>
-                    </p>
-                  </div>
-
-                  <div className="form-actions">
-                    <button 
-                      onClick={() => handleViewDetails(form)}
-                      className="action-btn view-btn"
-                    >
-                      👁️ Xem
-                    </button>
-                    
-                    <button 
-                      onClick={() => handlePrintForm(form)}
-                      className="action-btn print-btn"
-                    >
-                      🖨️ In
-                    </button>
-
-                    {isAdmin && (
-                      <button 
-                        onClick={() => handleDelete(form.id, form.type)}
-                        disabled={deletingId === form.id}
-                        className="action-btn delete-btn"
-                      >
-                        {deletingId === form.id ? '⏳...' : '🗑️ Xóa'}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+          {/* Chỉ hiển thị chi phí cho form đăng ký thành viên */}
+          {!isCampRegistration && form.paymentInfo && (
+            <>
+              <p><strong>Phí thường niên:</strong> ${form.paymentInfo.annualFee || 0}.00</p>
+              {/* Có thể thêm các mục thanh toán khác (áo, khăn) ở đây */}
+            </>
           )}
+
+          {isCampRegistration && (
+            <p><strong>Ghi chú:</strong> Chi phí Trại sẽ được thông báo qua email.</p>
+          )}
+
         </div>
 
-        {/* Admin Stats */}
-        {isAdmin && forms.length > 0 && (
-          <div className="admin-stats">
-            <h3>📊 Thống kê tổng quan</h3>
-            <div className="stats-grid">
-              <div className="stat-item">
-                <span className="stat-number">{forms.length}</span>
-                <span className="stat-label">Tổng đơn</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">{forms.filter(f => f.type === 'membership').length}</span>
-                <span className="stat-label">Thành viên</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">{forms.filter(f => f.type === 'camp').length}</span>
-                <span className="stat-label">Trại</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">{forms.filter(f => f.paid).length}</span>
-                <span className="stat-label">Đã thanh toán</span>
-              </div>
-            </div>
+        {/* Thông tin Liên hệ khẩn cấp */}
+        {form.healthInfo?.emergencyContact && (
+          <div className="detail-section">
+            <h4>Liên hệ khẩn cấp</h4>
+            <p><strong>Tên:</strong> {form.healthInfo.emergencyContact.name}</p>
+            <p><strong>Điện thoại:</strong> {form.healthInfo.emergencyContact.phone}</p>
+            <p><strong>Quan hệ:</strong> {form.healthInfo.emergencyContact.relationship}</p>
           </div>
         )}
+
+        <div className="detail-actions">
+          <PDFGenerator
+            formData={selectedForm}
+            // isCamp: Giả sử bạn có thể check loại form từ dữ liệu
+            isCamp={selectedForm.isCamp || false}
+          />
+        </div>
       </div>
+    );
+  };
+  // --- KẾT THÚC HÀM RENDER ---
+
+  if (loadingUser || loadingForms) return <p>{t('loading')}</p>;
+  if (error) return <p className="error">{error}</p>;
+
+  return (
+    <div className="dashboard">
+      <h2>{t('dashboard.title')}</h2>
+      <p>{t('dashboard.welcome')}: {user?.email}</p>
+
+      {/* THAY ĐỔI Ở ĐÂY CHO NÚT ĐĂNG XUẤT */}
+      <button onClick={logout} className="action-btn-danger" style={{ marginBottom: '20px' }}>
+        {t('logout')}
+      </button>
+
+      <div className="sticky-note-container">
+        {forms.length === 0 ? (
+          <p>{t('dashboard.noForms')}</p>
+        ) : (
+          forms.map((form) => (
+            <div key={form.id} className="sticky-note">
+              <h4>{form.mainInfo?.givenName} {form.mainInfo?.lastName}</h4>
+              <p>{t('form.submitted')}: {form.submissionDate || 'N/A'}</p>
+              <p>{form.paid ? t('form.paid') : t('form.unpaid')}</p>
+
+              {/* THAY ĐỔI Ở ĐÂY CHO NÚT XEM */}
+              <button
+                onClick={() => handleView(form)}
+                className="action-btn-secondary"
+              >
+                {t('form.view')}
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* POPUP HIỂN THỊ CHI TIẾT */}
+      {selectedForm && (
+        <div className="form-detail-overlay">
+          <div className="form-detail-popup">
+            <div className="form-detail-content">
+              <h3>{t('form_detail.title')}</h3>
+              <p><strong>ID:</strong> {selectedForm.id}</p>
+              <p><strong>{t('form.submitted')}:</strong> {selectedForm.submissionDate}</p>
+              {renderFormDetails(selectedForm)}
+              <hr />
+
+              {/* Hiển thị chi tiết (ví dụ: Tên, Email, Trạng thái thanh toán) */}
+              <h4>{t('main_info_title')}</h4>
+              <p>Tên: {selectedForm.mainInfo?.givenName} {selectedForm.mainInfo?.lastName}</p>
+              <p>Email: {selectedForm.mainInfo?.email}</p>
+              <p>Trạng thái thanh toán:
+                <strong> {selectedForm.paid ? t('form.paid') : t('form.unpaid')}</strong>
+              </p>
+
+              {/* Bạn có thể thêm nhiều chi tiết khác của form ở đây */}
+              <button onClick={handleClose} className="btn action-btn-secondary" style={{ marginTop: '20px' }}>
+                {t('close_btn')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default UserDashboard;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../LanguageContext';
+import './HomePage.css'; // Đảm bảo import file CSS mới
 
 function HomePage() {
   const navigate = useNavigate();
@@ -11,18 +12,17 @@ function HomePage() {
   };
 
   const handleEventsClick = () => {
-    navigate('/events'); // Dẫn đến trang events mới
+    navigate('/events');
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      
+    <div className="home-page">
       <h1>{t('homepage_title')}</h1>
       <p>{t('homepage_subtitle')}</p>
-      <button onClick={handleRegistrationClick} style={{ margin: '10px', padding: '10px 20px', fontSize: '16px' }}>
+      <button onClick={handleRegistrationClick} className="primary-btn">
         {t('homepage_register_btn')}
       </button>
-      <button onClick={handleEventsClick} style={{ margin: '10px', padding: '10px 20px', fontSize: '16px' }}>
+      <button onClick={handleEventsClick} className="secondary-btn">
         {t('homepage_events_btn')}
       </button>
     </div>

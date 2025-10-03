@@ -1,0 +1,61 @@
+/* Thiết lập màu nền và padding chung cho footer */
+.app-footer {
+    background-color: var(--primary-color); /* Sử dụng màu chủ đạo đã định nghĩa */
+    color: var(--button-text-color); /* Màu chữ trắng/sáng */
+    padding: 20px 0;
+    margin-top: 50px; /* Thêm khoảng cách với nội dung phía trên */
+    width: 100%;
+    /* Đảm bảo font chữ cute đã áp dụng từ bước trước */
+    font-family: 'Quicksand', sans-serif;
+}
+
+.app-footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Cho phép xuống dòng trên màn hình nhỏ */
+}
+
+/* Style cho phần bản quyền */
+.footer-content p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    font-weight: 300;
+}
+
+/* Style cho các liên kết */
+.footer-links a {
+    color: var(--button-text-color);
+    text-decoration: none;
+    margin-left: 20px;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+.footer-links a:hover {
+    color: var(--secondary-color); /* Thay đổi màu khi di chuột để tạo hiệu ứng */
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-links {
+        margin-top: 10px;
+    }
+    
+    .footer-links a {
+        display: block; /* Mỗi link 1 dòng */
+        margin: 5px 0;
+    }
+}

@@ -3,6 +3,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../LanguageContext';
 import { calculateTotal } from '../utils/paymentUtils';
+import './ThankYouPage.css'; // Đảm bảo import file CSS mới
 
 function ThankYouPage() {
   const navigate = useNavigate();
@@ -14,7 +15,6 @@ function ThankYouPage() {
     navigate('/');
   };
 
-  // Chỉ tính tổng cho membership, không tính cho camp
   const totalAmount = formData && !isCamp ? calculateTotal(formData.paymentInfo, formData.isAdult) : 0;
 
   const participantName = formData ? [
@@ -28,14 +28,13 @@ function ThankYouPage() {
     <div className="thank-you-container">
       <h1>{t('thank_you_title')}</h1>
       
-      {/* HIỂN THỊ THÔNG BÁO KHÁC NHAU CHO CAMP VÀ MEMBERSHIP */}
       {isCamp ? (
-        <div className="thank-you-message">
+        <div className="thank-you-message camp-message">
           <p>{t('camp_thank_you_message')}</p>
           <p>Chúng tôi sẽ liên hệ với bạn sớm để thông báo thêm chi tiết về trại.</p>
         </div>
       ) : (
-        <div className="thank-you-message">
+        <div className="thank-you-message membership-message">
           <p>{t('thank_you_message')}</p>
         </div>
       )}
@@ -49,7 +48,6 @@ function ThankYouPage() {
             <p><strong>{t('main_info_email')}:</strong> {formData.mainInfo?.email}</p>
             <p><strong>{t('main_info_cell_phone')}:</strong> {formData.mainInfo?.cellPhone}</p>
             
-            {/* CHỈ HIỂN THỊ THÔNG TIN PHỤ HUYNH CHO MEMBERSHIP và không phải adult */}
             {!isCamp && !formData.isAdult && (
               <>
                 <p><strong>{t('main_info_father_name')}:</strong> {formData.mainInfo?.fatherName}</p>
@@ -60,7 +58,6 @@ function ThankYouPage() {
             <p><strong>Địa chỉ:</strong> {formData.mainInfo?.streetAddress}, {formData.mainInfo?.city}, {formData.mainInfo?.state}, {formData.mainInfo?.zip}</p>
           </div>
 
-          {/* CHỈ HIỂN THỊ BIÊN LAI CHO MEMBERSHIP */}
           {!isCamp && formData.paymentInfo && (
             <div className="receipt">
               <h3>Biên lai thanh toán</h3>
@@ -119,12 +116,12 @@ function ThankYouPage() {
       )}
 
       <div className="action-buttons">
-        <button onClick={handleBackToHome} className="btn">
+        <button onClick={handleBackToHome} className="home-btn">
           {t('back_to_home')}
         </button>
         
         {!isCamp && (
-          <button onClick={() => window.print()} className="btn">
+          <button onClick={() => window.print()} className="print-btn">
             In biên lai
           </button>
         )}
