@@ -71,30 +71,30 @@
 
 /* Lớp phủ toàn màn hình */
 .form-detail-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 3000;
-  backdrop-filter: blur(5px);
+    /* Đảm bảo nó che toàn màn hình và nổi lên trên */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Đảm bảo nó nổi lên trên các thành phần khác */
 }
 
-/* Popup chính */
 .form-detail-popup {
-  background: white;
-  padding: 30px;
-  border-radius: 15px;
-  max-width: 600px;
-  width: 90%;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  position: relative;
-  max-height: 90vh;
-  overflow-y: auto; 
+    background-color: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    width: 95%; /* Cho phép rộng hơn trên màn hình lớn */
+    max-width: 900px; /* Giới hạn kích thước tối đa */
+    max-height: 90vh; /* Chiều cao tối đa là 90% viewport */
+    overflow-y: auto; /* <--- KHẮC PHỤC: CHO PHÉP CUỘN KHI NỘI DUNG DÀI */
+    transform: scale(0.9);
+    animation: scaleIn 0.3s forwards;
 }
 
 .form-detail-popup h3 {

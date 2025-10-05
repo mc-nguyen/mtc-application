@@ -1,0 +1,155 @@
+/* Import font 'Be Vietnam Pro' từ Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700&display=swap');
+
+/* --- Cài đặt Chung --- */
+.admin-login-container {
+    /* Đảm bảo toàn bộ form được căn giữa màn hình */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    /* Nền gradient nhẹ nhàng */
+    background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+    /* Font cho tiếng Việt: Be Vietnam Pro */
+    font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+/* --- Hộp Form Chính --- */
+.admin-login-container form {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 20px; /* Góc bo tròn lớn, dễ thương */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Bóng đổ mềm mại */
+    width: 100%;
+    max-width: 400px;
+    opacity: 0; /* Bắt đầu với độ mờ 0 cho animation */
+    transform: translateY(20px); /* Bắt đầu từ dưới 20px */
+    animation: fadeInSlideUp 0.6s ease-out forwards; /* Hiệu ứng hiện dần và trượt lên */
+}
+
+/* Keyframes cho hiệu ứng form */
+@keyframes fadeInSlideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Tiêu đề --- */
+.admin-login-container h2 {
+    color: #4a4e69;
+    margin-bottom: 25px;
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-align: center;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5); /* Hiệu ứng chữ nhẹ */
+}
+
+/* --- Group Input --- */
+.admin-login-container .form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.admin-login-container .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #8d99ae;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* --- Input Fields --- */
+.admin-login-container input {
+    box-sizing: border-box; 
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e4e8;
+    border-radius: 12px; /* Bo tròn đáng yêu */
+    font-size: 1rem;
+    color: #4a4e69;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #f7f9fb; /* Nền input hơi xám nhẹ */
+    font-family: 'Be Vietnam Pro', sans-serif; /* Đảm bảo input dùng font này */
+}
+
+.admin-login-container input:focus {
+    border-color: #4361ee; /* Màu sắc nổi bật khi focus */
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2); /* Hiệu ứng glow nhẹ */
+    outline: none;
+    background-color: #ffffff;
+}
+
+/* --- Nút Đăng Nhập --- */
+.admin-login-container button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #4361ee; /* Màu xanh/tím dễ thương */
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px; /* Góc bo tròn đồng bộ */
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3); /* Bóng đổ cho nút */
+    font-family: 'Be Vietnam Pro', sans-serif; /* Đảm bảo button dùng font này */
+}
+
+.admin-login-container button[type="submit"]:hover:not(:disabled) {
+    background-color: #3a53d6; /* Màu đậm hơn khi hover */
+    transform: translateY(-2px); /* Hiệu ứng nhấc lên nhẹ nhàng */
+    box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+}
+
+.admin-login-container button[type="submit"]:active:not(:disabled) {
+    transform: translateY(0); /* Nhấn xuống khi click */
+    box-shadow: 0 2px 10px rgba(67, 97, 238, 0.3);
+}
+
+.admin-login-container button[type="submit"]:disabled {
+    background-color: #aeb8c7; /* Màu xám khi đang loading */
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+/* --- Thông báo Lỗi --- */
+.admin-login-container .error-message {
+    color: #e63946;
+    background-color: #ffe5e5;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+    border: 1px solid #e63946;
+    /* Hiệu ứng lắc nhẹ khi lỗi */
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+/* --- Responsive (cho điện thoại) --- */
+@media (max-width: 500px) {
+    .admin-login-container form {
+        padding: 30px 25px; /* Giảm padding trên điện thoại */
+        margin: 10px;
+    }
+
+    .admin-login-container h2 {
+        font-size: 1.5rem; /* Giảm kích thước tiêu đề */
+    }
+
+    .admin-login-container button[type="submit"] {
+        padding: 10px;
+        font-size: 1rem;
+    }
+}
