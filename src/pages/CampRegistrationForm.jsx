@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import StepIndicator from '../components/StepIndicator';
-import MainInfo from '../components/MainInfo';
+import CampInfo from '../components/CampInfo';
 import HealthInfo from '../components/HealthInfo';
 import WaiverRelease from '../components/WaiverRelease';
 import { useLanguage } from '../LanguageContext';
@@ -16,7 +16,7 @@ function CampRegistrationForm() {
   const [formData, setFormData] = useState({
     dob: '',
     isAdult: false,
-    mainInfo: {},
+    campInfo: {},
     healthInfo: {
       emergencyContact: {
         name: '',
@@ -53,11 +53,10 @@ function CampRegistrationForm() {
           </section>
         );
       case 1:
-        return <MainInfo
-          ref={mainInfoRef}
+        return <CampInfo
+          ref={mainInfoRef} // Vẫn dùng mainInfoRef cho tiện, nhưng giờ nó trỏ đến CampInfo
           formData={formData}
           setFormData={setFormData}
-          isCamp={true}
         />;
       case 2:
         return <HealthInfo
@@ -70,7 +69,6 @@ function CampRegistrationForm() {
           ref={waiverReleaseRef}
           formData={formData}
           setFormData={setFormData}
-          isCamp={true}
         />;
       default:
         return null;
@@ -79,7 +77,7 @@ function CampRegistrationForm() {
 
   return (
     <section className="camp-form">
-      <h1 className="form-title">{t('camp_form_title')}</h1>
+      <h1 className="form-title">Sa Mạc Bình Minh 15</h1>
       <StepIndicator currentStep={currentStep} steps={steps} />
       {renderStepComponent()}
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useAuth } from "../services/AuthContext";
 import { db } from "../config/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
@@ -16,9 +16,10 @@ const UserDashboard = () => {
   const [loadingForms, setLoadingForms] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const popupRef = useRef(null); 
 
   useEffect(() => {
-    // ... (logic fetchForms giữ nguyên) ...
+    // START: CẬP NHẬT HÀM fetchForms
     const fetchForms = async () => {
       if (loadingUser) return;
       if (!user?.email) {
@@ -47,19 +48,36 @@ const UserDashboard = () => {
         const formIds = emailSnap.data().forms || [];
         const formDataList = [];
 
+        // DANH SÁCH CÁC COLLECTION CÓ THỂ CHỨA SUBMISSION
+        const submissionCollections = ["formSubmissions", "campSubmissions"];
+
         for (const id of formIds) {
-          const formRef = doc(
-            db,
-            "artifacts",
-            "mtc-applications",
-            "public",
-            "data",
-            "formSubmissions",
-            id
-          );
-          const formSnap = await getDoc(formRef);
-          if (formSnap.exists()) {
-            formDataList.push({ id: formSnap.id, ...formSnap.data() });
+          let formSnap = null;
+          let isCampForm = false;
+
+          // Vòng lặp để kiểm tra từng collection
+          for (const collectionName of submissionCollections) {
+            const formRef = doc(
+              db,
+              "artifacts",
+              "mtc-applications",
+              "public",
+              "data",
+              collectionName, // Dùng tên collection động
+              id
+            );
+            
+            formSnap = await getDoc(formRef);
+            
+            if (formSnap.exists()) {
+              isCampForm = collectionName === "campSubmissions";
+              
+              // Thêm form data cùng với cờ isCampForm để phân biệt loại form
+              const data = formSnap.data();
+              formDataList.push({ id: formSnap.id, isCamp: isCampForm, ...data });
+              
+              break; // Đã tìm thấy form, không cần kiểm tra collection khác
+            }
           }
         }
         setForms(formDataList);
@@ -70,12 +88,31 @@ const UserDashboard = () => {
         setLoadingForms(false);
       }
     };
+    // END: CẬP NHẬT HÀM fetchForms
 
     fetchForms();
   }, [user, loadingUser, t]);
 
   const handleView = (form) => setSelectedForm(form);
-  const handleClose = () => setSelectedForm(null);
+  const handleClose = useCallback(() => {setSelectedForm(null)}, []);
+
+  useEffect(() => {
+    // Hàm xử lý sự kiện click
+    const handleClickOutside = (event) => {
+      // Nếu popup đang mở VÀ click xảy ra ngoài popup content
+      if (selectedForm && popupRef.current && !popupRef.current.contains(event.target)) {
+        handleClose();
+      }
+    };
+
+    // Thêm event listener khi component mount (hoặc selectedForm thay đổi)
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Dọn dẹp: Gỡ bỏ event listener khi component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [selectedForm, handleClose]); // Chạy lại khi selectedForm hoặc handleClose thay đổi
 
   const handleLogout = async () => {
     await logout(); // Gọi hàm logout từ AuthContext
@@ -84,13 +121,13 @@ const UserDashboard = () => {
 
   // --- HÀM RENDER CHI TIẾT FORM ---
   const getFormType = (form) => {
-    // Giả định: Đơn đăng ký thành viên có paymentInfo.annualFee
+    // Kiểm tra cờ isCamp đã được thêm vào lúc fetch
+    if (form.isCamp) {
+      return t("form_type_camp");
+    }
+    // Giả định: Đơn đăng ký thành viên có paymentInfo.annualFee (hoặc logic khác)
     if (form.paymentInfo?.annualFee) {
       return t("form_type_registration");
-    }
-    // Giả định: Đơn đăng ký trại có isCamp trong waiverRelease
-    if (form.waiverRelease?.isCamp) {
-      return t("form_type_camp");
     }
     return t("form_type_unknown");
   };
@@ -109,18 +146,19 @@ const UserDashboard = () => {
     const dob = form.dob
       ? new Date(form.dob).toLocaleDateString("vi-VN")
       : "N/A";
-    const isCampRegistration = form.waiverRelease?.isCamp;
+    const isCampRegistration = form.isCamp; // Dùng cờ mới
 
     return (
       <div className="form-detail-overlay">
-        <div className="form-detail-popup">
+        <div className="form-detail-popup" ref={popupRef}>
           <div className="form-detail-content">
-            <h3>{t("form_detail.title")}</h3>
+            <h3>{t("form_detail_title")}</h3>
+            {/* ... (các chi tiết khác giữ nguyên) ... */}
             <p>
               <strong>ID:</strong> {selectedForm.id}
             </p>
             <p>
-              <strong>{t("form.submitted")}:</strong>{" "}
+              <strong>{t("form_submitted")}:</strong>{" "}
               {selectedForm.submissionDate}
             </p>
             <div className="form-detail-content">
@@ -188,13 +226,10 @@ const UserDashboard = () => {
                 </div>
               )}
 
-              <div className="detail-actions">
-                <PDFGenerator
-                  formData={selectedForm}
-                  // isCamp: Giả sử bạn có thể check loại form từ dữ liệu
-                  isCamp={selectedForm.isCamp || false}
-                />
-              </div>
+              <PDFGenerator
+                formData={selectedForm}
+                isCamp={isCampRegistration} // Dùng cờ mới
+              />
             </div>
             <hr />
 
@@ -257,7 +292,7 @@ const UserDashboard = () => {
                 {form.mainInfo?.givenName} {form.mainInfo?.lastName}
               </h4>
               <p>
-                {t("form.submitted")}: {form.submissionDate || "N/A"}
+                {t("form_submitted")}: {form.submissionDate || "N/A"}
               </p>
               <p>{form.paid ? t("form.paid") : t("form.unpaid")}</p>
 

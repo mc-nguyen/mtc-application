@@ -127,6 +127,53 @@
   min-height: 100px; 
 }
 
+/* --- Style Riêng cho Radio Buttons --- */
+/* Cần ẩn radio button mặc định và thay thế bằng pseudo-element */
+.form-section__field input[type="radio"] {
+    /* Ẩn radio mặc định */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    /* Cấu hình kích thước và vị trí */
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--input-border-color);
+    border-radius: 50%; /* Tròn */
+    margin-right: 8px; /* Khoảng cách với text label */
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    top: 2px; /* Căn chỉnh với text label */
+    background-color: #fff;
+}
+
+/* Khi radio button được focus */
+.form-section__field input[type="radio"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(128, 203, 196, 0.3);
+    border-color: var(--input-focus-color);
+}
+
+/* Khi radio button được chọn (checked) */
+.form-section__field input[type="radio"]:checked {
+    border-color: var(--primary-color);
+}
+
+/* Tạo chấm tròn bên trong khi radio button được chọn */
+.form-section__field input[type="radio"]:checked::before {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 
 /* Style cho thông báo lỗi */
 .required-message {
@@ -207,4 +254,40 @@
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
+}
+
+/* Style cho phần hiển thị Minor (Checkbox read-only) */
+.minor-check-field {
+    /* Đảm bảo label và checkbox nằm trên cùng một hàng */
+    align-items: flex-start;
+}
+
+.checkbox-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px; /* Giữ kích thước tương tự input */
+    border: 2px solid var(--input-border-color);
+    border-radius: 10px;
+    font-size: 1.1em;
+    background-color: #f7f7f7; /* Nền xám nhạt để chỉ ra là read-only */
+}
+
+.checkbox-display input[type="checkbox"] {
+    /* Tùy chỉnh kích thước checkbox */
+    width: 20px;
+    height: 20px;
+    /* Không cho phép click */
+    pointer-events: none;
+}
+
+.checkbox-display__label {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Ẩn input[type="text"] cũ cho trường minor */
+.form-section__input[type="text"].minor-status {
+    background-color: #f7f7f7;
+    cursor: not-allowed;
 }

@@ -13,7 +13,7 @@ const AdminRegistration = ({ members, handleDelete, handlePaidToggle }) => {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    
+
     // FIX APPLIED HERE: This line now correctly calls .slice() on an array.
     const currentMembers = members.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(members.length / itemsPerPage);
@@ -119,14 +119,9 @@ const AdminRegistration = ({ members, handleDelete, handlePaidToggle }) => {
                     <p><strong>ID:</strong> {member.id}</p>
                 </div>
 
+                <PDFGenerator formData={member} isCamp={false} />
+
                 <div className="detail-actions">
-                    <PDFGenerator formData={member} isCamp={false} />
-                    <button
-                        onClick={() => handleDelete(member.id, 'member')}
-                        className="delete-btn"
-                    >
-                        Xóa đăng ký trại
-                    </button>
                     <button
                         onClick={() => handlePaidToggle(member.id, member.paid || false)}
                         className={member.paid ? 'paid-btn' : 'unpaid-btn'}

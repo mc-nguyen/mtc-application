@@ -9,7 +9,7 @@ const WaiverRelease = forwardRef(({ formData, setFormData }, ref) => {
   const [initials, setInitials] = useState({});
   const [showErrors, setShowErrors] = useState(false);
 
-  const participantName = `${formData.mainInfo.givenName || ''} ${formData.mainInfo.lastName || ''}`.trim();
+  const participantName = formData.campInfo?.participantName || `${formData.mainInfo?.givenName || ''} ${formData.mainInfo?.lastName || ''}`.trim();
   const parentName = formData.mainInfo.parentName || '';
 
   const handleInitialChange = (key) => {

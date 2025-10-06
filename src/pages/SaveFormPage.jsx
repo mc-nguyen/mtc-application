@@ -23,6 +23,7 @@ const SaveFormPage = () => {
   const [password, setPassword] = useState('');
 
   const formData = location.state?.formData;
+  const isCamp = location.state?.isCamp || false;
   const email = formData?.mainInfo?.email;
 
   useEffect(() => {
@@ -55,7 +56,9 @@ const SaveFormPage = () => {
   const saveFormToExistingUser = async (userRef) => {
     try {
       setStatus('saving');
-      const formRef = doc(collection(db, 'artifacts', 'mtc-applications', 'public', 'data', 'forms'));
+      const formRef = isCamp ? 
+        doc(collection(db, 'artifacts', 'mtc-applications', 'public', 'data', 'campSubmissions')) :
+        doc(collection(db, 'artifacts', 'mtc-applications', 'public', 'data', 'formSubmissions'));
       await setDoc(formRef, { ...formData, submissionDate: new Date().toISOString() }); // Thêm submissionDate
       const formId = formRef.id;
 

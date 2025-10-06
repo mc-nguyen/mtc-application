@@ -23,6 +23,7 @@ export const translations = {
         // ==================== CÁC BƯỚC FORM ====================
         step_dob: "Ngày sinh",
         step_main_info: "Thông tin cá nhân",
+        step_camp_info: "Thông Tin Trại & Cam Kết",
         step_payment: "Thanh toán",
         step_health: "Sức khỏe",
         step_waiver: "Miễn trừ",
@@ -122,6 +123,7 @@ export const translations = {
         signature_date: "Ngày ký:",
         signature_clear_btn: "Ký lại",
 
+        required_field: "Vui lòng điền đầy đủ thông tin!",
         main_info_participant_signature_content: "Em xin được ghi danh gia nhập phong trào TNTT tại <strong style=\"background: yellow\">Đoàn TNTT Mẹ Thiên Chúa, Riverside</strong>. Em hứa sẽ vâng lời và theo sự hướng dẫn của cha Tuyên Úy Đoàn, Đoàn Trưởng, các trợ tá, các phụ huynh cũng như các anh chị huynh trưởng có trách nhiệm trong đoàn và trong ngành mà em sinh hoạt hằng tuần. Em sẽ cố gắng sống 4 khẩu hiệu của Thiếu Nhi: Cầu Nguyện, Rước Lễ, Hy Sinh và Làm Việc Tông Ðồ cũng như thực hành các tôn chỉ của phong trào TNTT. Em sẽ chu toàn bổn phận của một đoàn sinh trong đoàn TNTT và thực thi đúng các nội quy của đoàn TNTT.",
         main_info_parent_signature_content: "Tôi cho phép con tôi sinh hoạt <strong style=\"background: yellow\">Đoàn TNTT-Mẹ Thiên Chúa, Riverside</strong>. Tôi sẽ hoàn toàn chịu trách nhiệm nếu có những trường hợp không may xảy ra với con tôi trong các giờ sinh hoạt của đoàn.",
         participant_signature_required: "Vui lòng ký tên của đoàn sinh vào đây.",
@@ -217,8 +219,36 @@ export const translations = {
         thank_you_message: "Đơn ghi danh của bạn đã được gửi thành công. Vui lòng thanh toán tiền mặt để hoàn tất quá trình.",
         camp_thank_you_message: "Đơn đăng ký Trại Bình Minh của bạn đã được gửi thành công!",
 
-        // ==================== TRẠI BÌNH MINH ====================
-        camp_form_title: "Đăng Ký Trại Bình Minh",
+        // === THÔNG BÁO & CHI TIẾT SỰ KIỆN ===
+        camp_announcement_title: "THÔNG BÁO TRẠI",
+        camp_intro_message: "Đoàn Thiếu Nhi Thánh Thể rất hân hạnh thông báo về Sa Mạc Đoàn thường niên sắp tới. Đây là cơ hội tuyệt vời để kết nối với Chúa Giêsu, gia đình, và bạn bè.",
+        event_details_title: "Thông Tin Sự Kiện",
+        event_location_label: "Địa điểm",
+        event_time_label: "Thời gian",
+        camp_fees_title: "Lệ phí Trại",
+        fee_to_be_announced: "Sẽ thông báo sau",
+        registration_deadline: "Hạn chót Ghi Danh",
+        contact_label: "Liên hệ Chính",
+        secondary_contact_label: "Liên hệ Hỗ trợ",
+
+        // === CAM KẾT VÀ CHỮ KÝ TRANG 1 ===
+        participant_signature_name_label: "Họ và Tên người tham gia ký", // Cho người lớn
+        participant_name_label: "Họ và Tên em Thiếu Nhi tham gia", // Cho trẻ em
+        parent_signature_name_label: "Họ và Tên Phụ huynh/Giám hộ ký",   // Cho trẻ em
+        enter_full_name_for_signature: "Nhập họ và tên đầy đủ của người ký",
+        enter_participant_full_name: "Nhập họ và tên đầy đủ của em Thiếu Nhi tham gia",
+        name_required_text: "Vui lòng nhập họ tên người ký.",
+        
+        adult_commitment_text: "Tôi, người tham gia, cam kết và đồng ý tuân theo các điều khoản và quy định của Ban Tổ Chức Trại.",
+        minor_commitment_text: "Tôi, phụ huynh/giám hộ, đồng ý cho con em tham gia và cam kết tuân theo các điều khoản và quy định của Ban Tổ Chức Trại.",
+
+        signature_participant_prompt: "Chữ Ký của Người Tham Gia",
+        signature_parent_prompt: "Chữ Ký của Phụ Huynh/Giám Hộ",
+
+        form_type_camp: "Trại Bình Minh",
+        form_submitted: "Thời gian nộp đơn",
+        form_type_registration: "Đăng ký Thường",
+        form_detail_title: "Chi tiết đơn đăng ký",
 
         // ==================== LƯU ĐƠN ĐĂNG KÝ ====================
         save_form_title: 'Lưu đơn đăng ký',
@@ -295,6 +325,7 @@ export const translations = {
         // ==================== FORM STEPS ====================
         step_dob: "Date of Birth",
         step_main_info: "Personal Information",
+        step_camp_info: "Camp Info & Commitment",
         step_payment: "Payment",
         step_health: "Health",
         step_waiver: "Waiver",
@@ -394,6 +425,7 @@ export const translations = {
         signature_date: "Date:",
         signature_clear_btn: "Re-sign",
 
+        required_field: "This field is required.",
         main_info_participant_signature_content: "I am writing to register for <strong style=\"background: yellow\">the VEYM Our Lady of Perpetual Help, Riverside</strong>. I promise to obey and follow the guidance of the chaplain, squad leader, aides, parents, and youth leaders who are responsible for the group and division I participate in weekly. I will try to live the four slogans of a Youth Member: Prayer, Eucharist, Sacrifice, and Apostolate, and practice the principles of the VEYM. I will fulfill my duty as a youth member and abide by the rules of the VEYM.",
         main_info_parent_signature_content: "I grant my child permission to participate in <strong style=\"background: yellow\">the VEYM Our Lady of Perpetual Help, Riverside</strong>. I will take full responsibility for any unfortunate incidents that may occur with my child during the group's activities.",
         participant_signature_required: "Please sign the participant's name here.",
@@ -489,8 +521,36 @@ export const translations = {
         thank_you_message: "Your registration has been submitted successfully. Please wait for a leader to contact you regarding the cash payment.",
         camp_thank_you_message: "Your Bình Minh Camp registration has been submitted successfully!",
 
-        // ==================== BINH MINH CAMP ====================
-        camp_form_title: "Bình Minh Camp Registration",
+        // === ANNOUNCEMENT & EVENT DETAILS ===
+        camp_announcement_title: "CAMP ANNOUNCEMENT",
+        camp_intro_message: "The Vietnamese Eucharistic Youth Movement is pleased to announce our upcoming annual Troop Camp. This will be a wonderful opportunity for everyone to connect with Jesus, family, and friends.",
+        event_details_title: "Event Details",
+        event_location_label: "Location",
+        event_time_label: "Time",
+        camp_fees_title: "Camp Fees",
+        fee_to_be_announced: "To be announced",
+        registration_deadline: "Registration Deadline",
+        contact_label: "Primary Contact",
+        secondary_contact_label: "Secondary Contact",
+
+        // === COMMITMENT AND SIGNATURE PAGE 1 ===
+        participant_signature_name_label: "Participant's Full Name for Signature", // For adults
+        participant_name_label: "Thiếu Nhi child's Full Name", // For minor
+        parent_signature_name_label: "Parent/Guardian's Full Name for Signature",   // For minors
+        enter_full_name_for_signature: "Enter the full name of the signer",
+        enter_participant_full_name: "Enter the full name of the Thiếu Nhi child",
+        name_required_text: "Signer's name is required.",
+        
+        adult_commitment_text: "I, the participant, understand and agree to comply with the terms and regulations set forth by the Camp Organizing Committee.",
+        minor_commitment_text: "I, the parent/guardian, give permission for my child to attend and agree to comply with the terms and regulations set forth by the Camp Organizing Committee.",
+
+        signature_participant_prompt: "Participant Signature",
+        signature_parent_prompt: "Parent/Guardian Signature",
+
+        form_type_camp: "Bình Minh Camp Registration",
+        form_submitted: "Form Submitted At",
+        form_type_registration: "Regular Registration",
+        form_detail_title: "Form Details",
 
         // ==================== SAVE REGISTRATION FORM ====================
         save_form_title: 'Save Registration Form',

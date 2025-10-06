@@ -5,6 +5,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebaseConfig';
 import { useLanguage } from '../LanguageContext';
 import './LoginPage.css'; // Đảm bảo import file CSS mới
+import { checkAdminRole } from '../utils/firestoreUtils';
 
 const LogIn = () => {
   const { t } = useLanguage();
@@ -21,11 +22,24 @@ const LogIn = () => {
     setError(null);
 
     try {
-      await signInWithEmailAndPassword(auth, email.trim(), password);
-      navigate('/dashboard');
+      // BƯỚC 1: ĐĂNG NHẬP (Lấy userCredential)
+      const userCredential = await signInWithEmailAndPassword(auth, email.trim(), password);
+      const user = userCredential.user;
+      
+      // BƯỚC 2: KIỂM TRA VAI TRÒ (ROLE CHECK)
+      const isAdmin = await checkAdminRole(user.email);
+      
+      // BƯỚC 3: CHUYỂN HƯỚNG CÓ ĐIỀU KIỆN
+      if (isAdmin) {
+        navigate('/admin'); // Chuyển đến trang Admin
+      } else {
+        navigate('/dashboard'); // Chuyển đến trang Dashboard cho user thường
+      }
+
     } catch (err) {
       console.error('Login failed:', err);
-      setError(t('login.invalidCredentials'));
+      // Giữ nguyên logic xử lý lỗi
+      setError(t('login.invalidCredentials')); 
     } finally {
       setLoading(false);
     }

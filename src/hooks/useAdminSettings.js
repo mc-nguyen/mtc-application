@@ -15,7 +15,6 @@ const DEFAULT_SETTINGS = {
     uniformSkortPrice: 25, 
     scarfPrice: 10,
     campName: 'Bình Minh Camp', 
-    campLocation: 'Sẽ thông báo sau', 
     campCost: 'Sẽ thông báo sau',
     isRegistrationOpen: true, 
     chaplainName: 'Cha Tuyên Úy',
@@ -24,6 +23,11 @@ const DEFAULT_SETTINGS = {
     troopLeaderPhone: '',
     blacklistPhones: '', 
     blacklistEmails: '',
+    campLocation: 'KKOTTONGNAE RETREAT CENTER, 37885 Woodchuck Rd, Temecula, CA 92592',
+    campTime: 'Friday, April 25th at 2 pm - Sunday, April 27th 2025 at 11 am',
+    campDeadline: '2 tháng 3 năm 2025',
+    adminContactName: 'Trưởng Quốc Dũng (Đoàn Phó Quản Trị)',
+    adminContactPhone: '(951) 215-1379',
 };
 
 export function useAdminSettings() {
@@ -204,5 +208,27 @@ export function useAdminSettings() {
         removeRegistrationTeamMember,
         resetToInitial,
         hasLocalChanges,
+    };
+}
+
+export function useCampSettings() {
+    const { settings, loading } = useAdminSettings();
+    
+    // Tách các thông tin liên quan đến trại ra ngoài
+    const campInfo = useMemo(() => ({
+        name: settings.campName,
+        location: settings.campLocation,
+        time: settings.campTime,
+        deadline: settings.campDeadline,
+        contacts: [
+            { name: settings.troopLeaderName, phone: settings.troopLeaderPhone },
+            { name: settings.adminContactName, phone: settings.adminContactPhone },
+        ],
+        // Loại bỏ 'fees' ở đây theo yêu cầu
+    }), [settings]);
+
+    return {
+        campInfo,
+        loading,
     };
 }

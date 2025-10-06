@@ -23,8 +23,8 @@ export const useCampRegistrationForm = (formData, setFormData, refs) => {
     // Steps khác với form thường (bỏ Payment, Rules)
     const campSteps = [
         { name: t('step_dob') },
-        { name: t('step_main_info') },
-        { name: t('step_health') },
+        { name: t('step_camp_info') }, 
+        { name: t('step_health') }, 
         { name: t('step_waiver') }
     ];
 
@@ -43,24 +43,12 @@ export const useCampRegistrationForm = (formData, setFormData, refs) => {
             }
         } else if (currentStep === 1) {
             if (refs.mainInfoRef.current && !refs.mainInfoRef.current.validate()) {
+                // validate() trong CampInfo sẽ kiểm tra chữ ký và tên người ký
                 return;
-            }
-            // VALIDATION RIÊNG CHO CAMP - có thể khác
-            const { mainInfo } = formData;
-            const requiredFields = [
-                'saintName', 'lastName', 'middleName', 'givenName',
-                'city', 'state', 'zip', 'cellPhone',
-                'emergencyContactName', 'emergencyContactPhone', 'email'
-            ];
-
-            for (const field of requiredFields) {
-                if (!mainInfo[field] || mainInfo[field].trim() === '') {
-                    alert(t('required_field_alert') + t('main_info_' + field.replace(/([A-Z])/g, '_$1').toLowerCase()));
-                    return;
-                }
             }
         } else if (currentStep === 2) {
             if (refs.healthInfoRef.current && !refs.healthInfoRef.current.validate()) {
+                // validate() trong CampInfo sẽ kiểm tra chữ ký và tên người ký
                 return;
             }
         } else if (currentStep === 3) {

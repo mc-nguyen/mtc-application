@@ -19,19 +19,19 @@ const AdminSettingsView = ({ settings, onEdit }) => {
         <div className="settings-grid">
           <div className="settings-field">
             <label>Phí Thường Niên ($)</label>
-            <div className="view-value">{settings.annualFee || 0} $</div>
+            <div className="view-value">${settings.annualFee || 0}</div>
           </div>
           <div className="settings-field">
             <label>Giá Áo Đồng Phục ($)</label>
-            <div className="view-value">{settings.uniformShirtPrice || 0} $</div>
+            <div className="view-value">${settings.uniformShirtPrice || 0}</div>
           </div>
           <div className="settings-field">
             <label>Giá Váy/Quần Đồng Phục ($)</label>
-            <div className="view-value">{settings.uniformSkortPrice || 0} $</div>
+            <div className="view-value">${settings.uniformSkortPrice || 0}</div>
           </div>
           <div className="settings-field">
             <label>Giá Khăn ($)</label>
-            <div className="view-value">{settings.scarfPrice || 0} $</div>
+            <div className="view-value">${settings.scarfPrice || 0}</div>
           </div>
         </div>
       </div>

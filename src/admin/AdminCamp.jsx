@@ -118,9 +118,10 @@ export const AdminCamp = ({ camps, handleDelete, handleCampPaidToggle }) => {
                     <p><strong>ID:</strong> {camp.id}</p>
                     <p><strong>Loại:</strong> {camp.type || 'Trại Bình Minh'}</p>
                 </div>
+                
+                <PDFGenerator formData={camp} isCamp={true} />
 
                 <div className="detail-actions">
-                    <PDFGenerator formData={camp} isCamp={true} />
                     <button
                         onClick={() => handleCampPaidToggle(camp.id, camp.paid || false)}
                         className={camp.paid ? 'paid-btn' : 'unpaid-btn'}
